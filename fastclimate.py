@@ -443,6 +443,16 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         # low - implicitly includes snow effect:
         Kice[iice2] = Kicethick
 
+        # land areas
+        # solar radiation
+        # surface incident sw radiation:
+        swdsfc = (1 - absair - albatm) * sw
+        # surface absorption sw radiation:
+        swsland = swdsfc * (1 - albland)
+        # reflected back up:
+        swbotland = swdsfc * albland
+        # longwave up:
+        lwsupland = epssfc * sigma * Tsland ** 4
 
 
 
