@@ -454,6 +454,11 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         # longwave up:
         lwsupland = epssfc * sigma * Tsland ** 4
 
+        # vertical advection (convection):
+        Valand = Kva * (Tsland - Ta - Va1)
+        iv1 = np.where(Valand < 0)
+        Valand[iv1] = 0
+
 
 
     # -- end main model loop
