@@ -185,6 +185,46 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     # use data from global COMPAREWITH variable once data is loaded:
     comparewith = COMPAREWITH
 
+    # set variables from options:
+    tmax = options['tmax']
+    plotyears = options['plotyears']
+    plotquality = options['plotquality']
+    comparewith = options['comparewith']
+    saveas = options['saveas']
+    toffset = options['toffset']
+    iceoffset = options['iceoffset']
+    co2 = options['co2']
+    albsnow = options['albsnow']
+    albsnowant = options['albsnowant']
+    albbare = options['albbare']
+    albonoice = options['albonoice']
+    alboicewin = options['alboicewin']
+    alboicesum = options['alboicesum']
+    albatm = options['albatm']
+    absair = options['absair']
+    Kha = options['Kha']
+    Kho1 = options['Kho1']
+    Khicefactor = options['Khicefactor']
+    Va1 = options['Va1']
+    Kva = options['Kva']
+    Kicethick = options['Kicethick']
+    Kicethin = options['Kicethin']
+    zicethick = options['zicethick']
+    leadfraction = options['leadfraction']
+    sc = options['sc']
+    epsua1 = options['epsua1']
+    epsba1 = options['epsba1']
+    epsa1 = options['epsa1']
+    epssfc = options['epssfc']
+    Csl = options['Csl']
+    Css = options['Css']
+    Tsnowtotal = options['Tsnowtotal']
+    Tsnowstart = options['Tsnowstart']
+    hocean = options['hocean']
+    qocean1 = options['qocean1']
+    dtday = options['dtday']
+    savestep = options['savestep']
+
     # create initialisation variables,
     # f(latitude) here assumes 10-deg lat steps ...
     # ocean area by lat array (%):
@@ -194,7 +234,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     # upper air, surface, ocean mixed layer,  ocean(ice) surface temps,
     # ice thickness
     # create by [Ta Tsland Tocean Tsocean hi]
-    if options['co2'] == 2:
+    if co2 == 2:
         tinit = data['tinit_2co2']
     else:
         tinit = data['tinit']
@@ -216,7 +256,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     n = np.arange(1, nl + 1)
     nm1 = np.arange(1, nlm1 + 1);
     # time step (years):
-    dt = options['dtday'] / 365
+    dt = dtday / 365
     # time step (secs):
     dtsec = dt * 3600 * 24 * 365
     # initial start counter:
@@ -236,7 +276,59 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     ocarearat[iblock] = 0
     ocarearat[inoblock] = area1[inoblock] / area2[inoblock]
 
+    # horizontal advection boundaries
+    # no flux from outside B.C.:
+    qas = 0.
+    qan = np.zeros((nl))
+    qos = 0
+    qon = np.zeros((nl))
+    qis = 0
+    qin = np.zeros((nl))
 
+    # constants (at least assumed so here)
+    # upper atmospheric bulk heat capacity per m2 (J/m2/K):
+    Ca = 9.352e6
+    # liquid ocean volumetric heat capacity (J/m3/K):
+    Cov = 4.18e6
+    # Freezing temperature at top of ice (K):
+    Tfreezetop = 273.16
+    # Freezing temperature of ocean (K):
+    Tfreezebot = 273.16 - 1.7
+    # Latent heat of fusion * ice density (J/m3):
+    lvrho = 3.34e8
+    # Planck's constant (J/s/m2/K4):
+    sigma=5.67e-8
+
+    # parameters derived from above
+    # Kha normalized by lat step (J/s/m2/K):
+    Khan = Kha / (dl ** 2)
+    # make scalar an array:
+    Kho = Kho1 * np.ones(nm1.shape)
+    # Fram Strait / Bering strait bottleneck to isolate Arctic Ocean (J lat2/s/m2/K):
+    Kho[15] = Kho[15] * 0.2
+    # Kho normalized by lat step (J/s/m2/K):
+    Khon = Kho / (dl ** 2)
+    # horizontal advection parameter for ice (lat2/s):
+    Khice = Kho * Khicefactor
+    # Khice normalized by lat step (1/s):
+    Khicen = Khice / (dl ** 2)
+    # change solar radiation if sc different from 1365:
+    swtop = swtop * (sc / 1365)
+    # ocean mixed layer bulk heat capacity (J/m2/K):
+    Cocean = Cov * hocean
+    # ocean flux from below mixed layer (J/s/m2) (not conserved):
+    qocean = qocean1 * np.ones(n.shape)
+    # magnitude of snow transition region temperature (K):
+    Tsnowrange = Tsnowstart - Tsnowtotal
+
+
+
+"""
+
+
+
+
+"""
 
 
 
