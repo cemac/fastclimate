@@ -222,6 +222,20 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     # initial start counter:
     it = 0
 
+    # areas
+    # convert % to fraction:
+    ocarea = area10 / 100
+    # approx relative area of each zone:
+    area = np.cos(dtr * l)
+    arearat = area[0:nlm1] / area[1:]
+    area1 = ocarea[0:nlm1] * area[0:nlm1]
+    area2 = ocarea[1:] * area[1:]
+    iblock = np.where((area1 == 0) | (area2 == 0))
+    inoblock = np.where((area1 > 0) & (area2 > 0))
+    ocarearat = np.zeros(area1.shape)
+    ocarearat[iblock] = 0
+    ocarearat[inoblock] = area1[inoblock] / area2[inoblock]
+
 
 
 
