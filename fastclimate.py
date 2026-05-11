@@ -413,7 +413,35 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         # Antarctica always snowy:
         Csland[nantsnow] = Css
 
-
+        # Sea Ice Effects on ABL/ocean Capacity and albedo:
+        inoice = np.where(hi == 0)
+        iice = np.where(hi > 0)
+        # transition region:
+        iice1 = np.where((hi > 0) & (hi < zicethick))
+        iice2 = np.where(hi >= zicethick)
+        hi[inoice] = 0
+        # set ice albedo lower if warm (melt ponds):
+        iwarm1 = np.where(Tsocean[iice1] > 273)
+        iwarm2 = np.where(Tsocean[iice2] > 273)
+        albocean = np.zeros(hi.shape)
+        albocean[inoice] = albonoice
+        # change for different ice thresholds  Kice high to account for leads:
+        alboice = np.zeros(hi.shape)
+        alboice[iice1] = alboicewin
+        alboice[iice1][iwarm1] = alboicesum
+        albocean[iice1] = (
+            albonoice + hi[iice1] * (alboice[iice1] - albonoice) / zicethick
+        )
+        # thicker ice has more snow less leads:
+        Kice = np.zeros(hi.shape)
+        Kice[iice1] = (
+            Kicethin + hi[iice1] * (Kicethick - Kicethin) / zicethick
+        )
+        alboice[iice2] = alboicewin
+        alboice[iice2][iwarm2] = alboicesum
+        albocean[iice2] = alboice[iice2]
+        # low - implicitly includes snow effect:
+        Kice[iice2] = Kicethick
 
 
 
