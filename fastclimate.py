@@ -148,8 +148,6 @@ def load_data(data_dir, data_files):
             data[var] = json.load(data_json)
     return data
 
-
-
 def run_fastclimate(options=None, data=None, comparewith=None):
     """
     Run fastclimate model
@@ -169,6 +167,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
                 DATA[var] = np.array(data[var])
     # use data from global DATA variable once data is loaded:
     data = DATA
+
     # if no comparison data provided ... :
     if not comparewith:
         # if no global data stored ... :
@@ -185,6 +184,44 @@ def run_fastclimate(options=None, data=None, comparewith=None):
                     COMPAREWITH[var] = comparewith[var]
     # use data from global COMPAREWITH variable once data is loaded:
     comparewith = COMPAREWITH
+
+    # create initialisation variables,
+    # f(latitude) here assumes 10-deg lat steps ...
+    # ocean area by lat array (%):
+    area10 = data['area10']
+    # shortwave radiation at top of atmos (W/m2):
+    swtop = data['swtop']
+    # upper air, surface, ocean mixed layer,  ocean(ice) surface temps,
+    # ice thickness
+    # create by [Ta Tsland Tocean Tsocean hi]
+    if options['co2'] == 2:
+        tinit = data['tinit_2co2']
+    else:
+        tinit = data['tinit']
+
+    # model parameters:
+    it = 0
+    iit = -1
+    # degrees to radians:
+    dtr = np.pi / 180
+    # latitude change (degrees):
+    dl = 10
+    firstl = -90 + (dl / 2)
+    lastl = 90 - (dl / 2)
+    # latitude (degrees):
+    l = np.arange(firstl, lastl + dl, dl)
+    # latitude steps:
+    nl = len(l)
+    nlm1 = nl - 1
+    n = np.arange(1, nl + 1)
+    nm1 = np.arange(1, nlm1 + 1);
+    # time step (years):
+    dt = options['dtday'] / 365
+    # time step (secs):
+    dtsec = dt * 3600 * 24 * 365
+    # initial start counter:
+    it = 0
+
 
 
 
