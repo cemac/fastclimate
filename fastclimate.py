@@ -278,11 +278,11 @@ def run_fastclimate(options=None, data=None, comparewith=None):
 
     # horizontal advection boundaries
     # no flux from outside B.C.:
-    qas = 0.
+    qas = np.zeros((nl))
     qan = np.zeros((nl))
-    qos = 0
+    qos = np.zeros((nl))
     qon = np.zeros((nl))
-    qis = 0
+    qis = np.zeros((nl))
     qin = np.zeros((nl))
 
     # constants (at least assumed so here)
@@ -367,8 +367,32 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     if (plotyears * 180) < savestep:
         plotyears = 1
 
+    # -- start main model loop
+
+    # starts at NH vernal equinox:
+    for t in np.arange(0, tmax + dt, dt):
+        # Upper atmosphere fluxes
+        # advection fluxes:
+        qwall = Khan * (Ta[:nlm1] - Ta[1:])
+        qas[:nlm1] = qwall[:nlm1]  * arearat[:nlm1]
+        qan[:nlm1] = -qwall[:nlm1] / arearat[:nlm1]
+        qa = qas + qan
+
+        # solar reflection and absorption:
+        # same for partial day steps:
+        sw = np.ones(n.shape) * swtop[
+            int(np.mod(np.floor(t * 365), 365))
+        ]
+        # absorbed on way down:
+        swdair = absair * sw
+        # longwave cooling of atmosphere:
+        lwup = epsua * sigma * Ta ** 4
+        lwdown = epsba * sigma * Ta ** 4
 
 
+
+
+    # -- end main model loop
 
 
 # ---
