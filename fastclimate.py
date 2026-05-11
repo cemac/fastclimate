@@ -336,6 +336,38 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     Tsocean = tinit[3] + toffset
     hi = tinit[4] + iceoffset
 
+    # adjust initial sea temps and ice thickness
+    # prevent below freezing sea temp:
+    ifreeze = np.where(Tocean < Tfreezebot)
+    Tocean[ifreeze] = Tfreezebot
+    # prevent negative ice thickness:
+    inegice = np.where(hi < 0)
+    hi[inegice] = 0.0
+    # latitudes where antarctic snow albedo applied:
+    nantsnow = [0, 1]
+
+    # automatic input corrections
+    # too large time step causes numerical instability:
+    if dtday > 1:
+        dtday = 1
+    # must be integer for proper plotting:
+    tmax = np.ceil(tmax)
+    # model must run for at least 2 years:
+    if tmax < 2:
+        tmax = 2
+    # too large savestep causes plotting problems:
+    if (savestep * dtday) > 40:
+        savestep = 40 / dtday
+    # save counter must be an integer:
+    savestep = np.ceil(savestep)
+    # plot period can't be longer than model run:
+    if plotyears > tmax:
+        tmax = np.ceil(plotyears)
+    # must have at least two plot points:
+    if (plotyears * 180) < savestep:
+        plotyears = 1
+
+
 
 
 
