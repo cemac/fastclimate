@@ -389,6 +389,32 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         lwup = epsua * sigma * Ta ** 4
         lwdown = epsba * sigma * Ta ** 4
 
+        # vertical convection, upward longwave, shortwave done below
+        # Suface/ABL fluxes
+        # snow effects on albedo and ABL heat capacity:
+        ilsnow = np.where(Tsland < Tsnowtotal)
+        ilbare = np.where(Tsland > Tsnowstart)
+        ilboth = np.where((Tsland <= Tsnowstart) & (Tsland >= Tsnowtotal))
+        albland = np.zeros(Tsland.shape)
+        Csland = np.zeros(Tsland.shape)
+        albland[ilsnow] = albsnow
+        Csland[ilsnow] = Css
+        albland[ilbare] = albbare
+        Csland[ilbare] = Csl
+        albland[ilboth] = (
+            albbare + (Tsland[ilboth] - Tsnowstart) * (albbare - albsnow) /
+            Tsnowrange
+        )
+        Csland[ilboth] = (
+            Csl + (Tsland[ilboth] - Tsnowstart) * (Csl - Css) / Tsnowrange
+        )
+        # Central Antartica always snowy  :
+        albland[nantsnow] = albsnowant
+        # Antarctica always snowy:
+        Csland[nantsnow] = Css
+
+
+
 
 
 
