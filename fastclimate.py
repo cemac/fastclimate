@@ -459,6 +459,44 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         iv1 = np.where(Valand < 0)
         Valand[iv1] = 0
 
+        # Ocean area
+        # flux through ice to top:
+        qice = np.zeros(n.shape)
+        # sea ice present:
+        if iice[0].size > 0:
+            qice[iice] = Kice[iice] * (Tfreezebot - Tsocean[iice]) / (hi[iice])
+            ithin = np.where(np.abs(qice) > 100)
+            qice[ithin] = np.sign(qice[ithin]) * 100
+            hi[ithin] = Kice[ithin] * (Tfreezebot - Tsocean[ithin]) / 100
+        qlead = (Tfreezebot - Tsocean[iice]) * 10 * leadfraction
+        qice[iice] = qice[iice] + qlead
+
+        # latitudinal horizontal ocean advection fluxes:
+        qwall[:nlm1] = Khon * (Tocean[:nlm1] - Tocean[1:])
+        qos[iblock[0] + 1] = 0
+        qos[inoblock[0] + 1] = qwall[inoblock] * ocarearat[inoblock]
+        qon[inoblock] = 0
+        qon[inoblock] = -qwall[inoblock] / ocarearat[inoblock]
+        qao = qos + qon
+
+        # latitudinal horizontal ice advection fluxes:
+        qwall[:nlm1] = Khicen * (hi[:nlm1] - hi[1:])
+        qis[iblock[0] + 1] = 0
+        qis[inoblock[0] + 1] = qwall[inoblock] * ocarearat[inoblock]
+        qin[inoblock] = 0
+        qin[inoblock] = -qwall[inoblock] / ocarearat[inoblock]
+        qaice = (qis + qin)
+        # convert to heat flux:
+        qai = -qaice * lvrho
+        # solar radiation
+        # surface absorption sw radiation:
+        swsocean = swdsfc * (1 - albocean)
+        # reflected back up:
+        swbotocean = swdsfc * albocean
+
+        # longwave up:
+        lwsupocean = epssfc * sigma * Tsocean ** 4
+
 
 
     # -- end main model loop
