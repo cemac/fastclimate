@@ -321,14 +321,21 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     # magnitude of snow transition region temperature (K):
     Tsnowrange = Tsnowstart - Tsnowtotal
 
+    # co2-changed emissivities just used values that gave 2-5 C changes
+    # top upper atmospheric emissivity  (Close to 500 mb?):
+    epsua = epsua1 - (co2 - 1) * .015
+    # bottom upper atmospheric emissivity (higher with clouds):
+    epsba = epsba1 + (co2 - 1) * .015
+    # total atmosphere LW absorptivity:
+    epsa = epsa1 + (co2 - 1) * .006
 
+    # set offset to initial prognostic variables:
+    Ta = tinit[0] + toffset
+    Tsland = tinit[1] + toffset
+    Tocean = tinit[2] + toffset
+    Tsocean = tinit[3] + toffset
+    hi = tinit[4] + iceoffset
 
-"""
-
-
-
-
-"""
 
 
 
