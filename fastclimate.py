@@ -497,6 +497,43 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         # longwave up:
         lwsupocean = epssfc * sigma * Tsocean ** 4
 
+        # vertical advection (convection)
+        # Fluxes start when lapse rate is > 6C/km:
+        Vaocean = Kva * (Tsocean - Ta - Va1)
+        iv1 = np.where(Vaocean < 0)
+        Vaocean[iv1] = 0
+
+        # Combine total Suface/ABL fluxes
+        # zonal average reflected back up:
+        swbot = swbotland * (1 - ocarea) + swbotocean * ocarea
+        # zonal average absorbed at surface:
+        sws = swsland * (1 - ocarea) + swsocean * ocarea
+        # zonal average longwave emitted at surface:
+        lwsup = lwsupland * (1 - ocarea) + lwsupocean * ocarea
+        # zonal average shortwave absorbed on way up:
+        swuair = absair * swbot
+        # zonal average convective transport (implicitly includes water vapor):
+        Va = Valand * (1 - ocarea) + Vaocean * ocarea
+
+        # Temperature changes
+        # Upper Air Temperature change:
+        Ta = Ta + dtsec * (
+            swdair + swuair - lwup - lwdown + epsa * lwsup + qa + Va
+        ) / Ca
+        # Surface/ABL Temperature change over land:
+        Tsland = Tsland + dtsec * (
+            -lwsupland + lwdown + swsland - Valand
+        ) / Csland
+        # Surface/ABL/Ocean change over ocean areas
+        # flux down to  surface:
+        qatms = -lwsupocean + lwdown + swsocean - Vaocean
+
+        # No ice:  Air/Surface temp adjusts instantly to ocean
+        Tsocean[inoice] = Tocean[inoice]
+        Tocean[inoice] = Tocean[inoice] + dtsec * (
+            qatms[inoice] + qai[inoice] + qao[inoice] + qocean[inoice]
+        ) / Cocean
+
 
 
     # -- end main model loop
