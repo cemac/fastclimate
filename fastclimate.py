@@ -618,14 +618,40 @@ def run_fastclimate(options=None, data=None, comparewith=None):
 
     # -- end main model loop
 
-    print(Qall.shape)
-    print(Qall[365])
+    # convert temperatures to centigrade:
+    TT -= 273.16
+    TTsland -= 273.16
+    TTocean -= 273.16
+    TTsocean -= 273.16
+    TTsavg -= 273.16
 
+    # create dict of results:
+    results = {
+        'tt': tt,
+        'TT': TT,
+        'TTsland': TTsland,
+        'TTocean': TTocean,
+        'TTsocean': TTsocean,
+        'TTsavg': TTsavg,
+        'Qs': Qs,
+        'Qa': Qa,
+        'Qatm': Qatm,
+        'Qice': Qice,
+        'Qall': Qall,
+        'Qmelt': Qmelt,
+        'Albocean': Albocean,
+        'Lw': Lw,
+        'Alpha': Alpha,
+        'Hi': Hi
+    }
+    # return the results:
+    return results
 
 # ---
 
 def main():
-    run_fastclimate()
+    results = run_fastclimate()
+    print(results['Hi'])
 
 if __name__ == '__main__':
     main()
