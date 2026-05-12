@@ -429,7 +429,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         # change for different ice thresholds  Kice high to account for leads:
         alboice = np.zeros(hi.shape)
         alboice[iice1] = alboicewin
-        alboice[iice1][iwarm1] = alboicesum
+        alboice[iice1[0][iwarm1]] = alboicesum
         albocean[iice1] = (
             albonoice + hi[iice1] * (alboice[iice1] - albonoice) / zicethick
         )
@@ -439,7 +439,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
             Kicethin + hi[iice1] * (Kicethick - Kicethin) / zicethick
         )
         alboice[iice2] = alboicewin
-        alboice[iice2][iwarm2] = alboicesum
+        alboice[iice2[0][iwarm2]] = alboicesum
         albocean[iice2] = alboice[iice2]
         # low - implicitly includes snow effect:
         Kice[iice2] = Kicethick
@@ -544,16 +544,16 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         # Top ice melting:
         imelt = np.where(Tsocean[iice] > Tfreezetop)
         # Melt ice with excess ABL heat:
-        hi[iice][imelt] = hi[iice][imelt] + (
+        hi[iice[0][imelt]] = hi[iice][imelt] + (
             Tfreezetop - Tsocean[iice][imelt]
         ) * Css / lvrho
-        Tsocean[iice][imelt] = Tfreezetop
+        Tsocean[iice[0][imelt]] = Tfreezetop
         # Bottom ice melting :
         iablate = np.where(Tocean[iice] > Tfreezebot)
-        hi[iice][iablate] = hi[iice][iablate] + (
+        hi[iice[0][iablate]] = hi[iice][iablate] + (
             Tfreezebot - Tocean[iice][iablate]
         ) * Cocean / lvrho
-        Tocean[iice][iablate] = Tfreezebot
+        Tocean[iice[0][iablate]] = Tfreezebot
         # Bottom ice freezing or new ice formation:
         ifreeze = np.where(Tocean < Tfreezebot)
         hi[ifreeze] = hi[ifreeze] + (
