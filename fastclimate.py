@@ -368,10 +368,34 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     if (plotyears * 180) < savestep:
         plotyears = 1
 
+    # time step range and number of savesteps:
+    t_range = np.arange(0, tmax + dt, dt)
+    s_steps = len([
+        i for i in range(t_range.size) if i % savestep == 0
+    ])
+    # allocate output arrays:
+    tt = np.ones((s_steps)) * np.nan
+    TT = np.ones((s_steps, n.size)) * np.nan
+    TTsland = np.ones((s_steps, n.size)) * np.nan
+    TTocean = np.ones((s_steps, n.size)) * np.nan
+    TTsocean = np.ones((s_steps, n.size)) * np.nan
+    TTsavg = np.ones((s_steps, n.size)) * np.nan
+    Qs = np.ones((s_steps, n.size)) * np.nan
+    Qa = np.ones((s_steps, n.size)) * np.nan
+    Qatm = np.ones((s_steps, n.size)) * np.nan
+    Qice = np.ones((s_steps, n.size)) * np.nan
+    Qall = np.ones((s_steps, n.size)) * np.nan
+    Qmelt = np.ones((s_steps, n.size)) * np.nan
+    Albocean = np.ones((s_steps, n.size)) * np.nan
+    Lw = np.ones((s_steps, n.size)) * np.nan
+    Alpha = np.ones((s_steps, n.size)) * np.nan
+    Hi = np.ones((s_steps, n.size)) * np.nan
+
     # -- start main model loop
 
+
     # starts at NH vernal equinox:
-    for t in np.arange(0, tmax + dt, dt):
+    for t in t_range:
         # Upper atmosphere fluxes
         # advection fluxes:
         qwall[:nlm1] = Khan * (Ta[:nlm1] - Ta[1:])
@@ -567,12 +591,35 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         # no sea ice in central Antarctica:
         hi[0] = 0
 
+        # increment step iteration counter:
         iit += 1
-
-
+        # store data if this is a 'savestep':
+        if iit % savestep == 0:
+            # days:
+            tt[it] = t * 365
+            TT[it] = Ta
+            TTsland[it] = Tsland
+            TTocean[it] = Tocean
+            TTsocean[it] = Tsocean
+            # Average surface temperature:
+            TTsavg[it] = Tsland * (1 - ocarea) + Tsocean * ocarea
+            Qs[it] = sws
+            Qa[it] = qa
+            Qatm[it] = qatms
+            Qice[it] = qice
+            Qall[it] = qai + qao - qice + qocean
+            Qmelt[it] = qatms + qice
+            Albocean[it] = albocean
+            Lw[it] = lwdown
+            Alpha[it] = albland
+            Hi[it] = hi
+            # increment savestep iteration counter:
+            it += 1
 
     # -- end main model loop
 
+    print(Qall.shape)
+    print(Qall[365])
 
 
 # ---
