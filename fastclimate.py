@@ -278,6 +278,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
 
     # horizontal advection boundaries
     # no flux from outside B.C.:
+    qwall = np.zeros((nl))
     qas = np.zeros((nl))
     qan = np.zeros((nl))
     qos = np.zeros((nl))
@@ -373,8 +374,8 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     for t in np.arange(0, tmax + dt, dt):
         # Upper atmosphere fluxes
         # advection fluxes:
-        qwall = Khan * (Ta[:nlm1] - Ta[1:])
-        qas[:nlm1] = qwall[:nlm1]  * arearat[:nlm1]
+        qwall[:nlm1] = Khan * (Ta[:nlm1] - Ta[1:])
+        qas[1:] = qwall[:nlm1] * arearat[:nlm1]
         qan[:nlm1] = -qwall[:nlm1] / arearat[:nlm1]
         qa = qas + qan
 
@@ -527,16 +528,51 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         # Surface/ABL/Ocean change over ocean areas
         # flux down to  surface:
         qatms = -lwsupocean + lwdown + swsocean - Vaocean
-
         # No ice:  Air/Surface temp adjusts instantly to ocean
         Tsocean[inoice] = Tocean[inoice]
         Tocean[inoice] = Tocean[inoice] + dtsec * (
             qatms[inoice] + qai[inoice] + qao[inoice] + qocean[inoice]
         ) / Cocean
+        # Ice Present: Upper fluxes go into ABL:
+        Tsocean[iice] = (
+            Tsocean[iice] + dtsec * (qatms[iice] + qice[iice]) / Css
+        )
+        Tocean[iice] = (
+            Tocean[iice] + dtsec *
+            (qai[iice] + qao[iice] -qice[iice] + qocean[iice]) / Cocean
+        )
+        # Top ice melting:
+        imelt = np.where(Tsocean[iice] > Tfreezetop)
+        # Melt ice with excess ABL heat:
+        hi[iice][imelt] = hi[iice][imelt] + (
+            Tfreezetop - Tsocean[iice][imelt]
+        ) * Css / lvrho
+        Tsocean[iice][imelt] = Tfreezetop
+        # Bottom ice melting :
+        iablate = np.where(Tocean[iice] > Tfreezebot)
+        hi[iice][iablate] = hi[iice][iablate] + (
+            Tfreezebot - Tocean[iice][iablate]
+        ) * Cocean / lvrho
+        Tocean[iice][iablate] = Tfreezebot
+        # Bottom ice freezing or new ice formation:
+        ifreeze = np.where(Tocean < Tfreezebot)
+        hi[ifreeze] = hi[ifreeze] + (
+            Tfreezebot - Tocean[ifreeze]
+        ) * Cocean / lvrho
+        Tocean[ifreeze] = Tfreezebot
+        # Return negative ice thickness to heat ocean:
+        ineg = np.where(hi < 0)
+        Tocean[ineg] = Tocean[ineg] - hi[ineg] * lvrho / Cocean
+        hi[ineg] = 0
+        # no sea ice in central Antarctica:
+        hi[0] = 0
+
+        iit += 1
 
 
 
     # -- end main model loop
+
 
 
 # ---
