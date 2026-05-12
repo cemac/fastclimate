@@ -11,7 +11,6 @@ simple climate model
 # std lib imports:
 import json
 import os
-import sys
 
 # third party imports:
 import numpy as np
@@ -25,13 +24,13 @@ DEFAULTS = {
     #  plot only last plotyears (years):
     'plotyears': 3,
     #  jpeg compaction 10-95 useful range:
-    'plotquality': 75,
+###     'plotquality': 75,
     #  this model run will be compared with one
     #  other previous run:
     'comparewith': '35yearstandard.json',
     #  name to use for later comparison
     #  'nosave' = no file saved:
-    'saveas': 'nosave',
+###     'saveas': 'nosave',
     # offset initial conditions ...
     # initial temperature offsets (^oC)
     # (Tocean<freezing will be adjusted):
@@ -138,11 +137,12 @@ COMPAREWITH = {}
 
 # --- functions
 
-
 def load_data(data_dir, data_files):
+    """
+    load data from a list of json files
+    """
     data = {}
-    for var in data_files.keys():
-        data_file = data_files[var]
+    for var, data_file in data_files.items():
         data_path = os.sep.join([data_dir, data_file])
         with open(data_path, 'r') as data_json:
             data[var] = json.load(data_json)
@@ -162,9 +162,9 @@ def run_fastclimate(options=None, data=None, comparewith=None):
             # load default data files:
             data = load_data(DATA_DIR, DATA_FILES)
             # for each data variable ... :
-            for var in data.keys():
+            for var, value in data.items():
                 # convert to numpy array and store:
-                DATA[var] = np.array(data[var])
+                DATA[var] = np.array(value)
     # use data from global DATA variable once data is loaded:
     data = DATA
 
@@ -177,20 +177,20 @@ def run_fastclimate(options=None, data=None, comparewith=None):
                 DATA_DIR, {'comparewith': options['comparewith']}
             )['comparewith']
             # convert comparison data to numpy arrays:
-            for var in comparewith.keys():
-                if type(comparewith[var]) == list:
-                    COMPAREWITH[var] = np.array(comparewith[var])
+            for var, value in comparewith.items():
+                if isinstance(value, list):
+                    COMPAREWITH[var] = np.array(value)
                 else:
-                    COMPAREWITH[var] = comparewith[var]
+                    COMPAREWITH[var] = value
     # use data from global COMPAREWITH variable once data is loaded:
     comparewith = COMPAREWITH
 
     # set variables from options:
     tmax = options['tmax']
     plotyears = options['plotyears']
-    plotquality = options['plotquality']
+###     plotquality = options['plotquality']
     comparewith = options['comparewith']
-    saveas = options['saveas']
+###     saveas = options['saveas']
     toffset = options['toffset']
     iceoffset = options['iceoffset']
     co2 = options['co2']
@@ -254,7 +254,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     nl = len(l)
     nlm1 = nl - 1
     n = np.arange(1, nl + 1)
-    nm1 = np.arange(1, nlm1 + 1);
+    nm1 = np.arange(1, nlm1 + 1)
     # time step (years):
     dt = dtday / 365
     # time step (secs):
@@ -305,7 +305,8 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     Khan = Kha / (dl ** 2)
     # make scalar an array:
     Kho = Kho1 * np.ones(nm1.shape)
-    # Fram Strait / Bering strait bottleneck to isolate Arctic Ocean (J lat2/s/m2/K):
+    # Fram Strait / Bering strait bottleneck to isolate Arctic Ocean
+    # (J lat2/s/m2/K):
     Kho[15] = Kho[15] * 0.2
     # Kho normalized by lat step (J/s/m2/K):
     Khon = Kho / (dl ** 2)
@@ -349,13 +350,11 @@ def run_fastclimate(options=None, data=None, comparewith=None):
 
     # automatic input corrections
     # too large time step causes numerical instability:
-    if dtday > 1:
-        dtday = 1
+    dtday = min(dtday, 1)
     # must be integer for proper plotting:
     tmax = np.ceil(tmax)
     # model must run for at least 2 years:
-    if tmax < 2:
-        tmax = 2
+    tmax = max(tmax, 2)
     # too large savestep causes plotting problems:
     if (savestep * dtday) > 40:
         savestep = 40 / dtday
@@ -510,7 +509,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         qis[inoblock[0] + 1] = qwall[inoblock] * ocarearat[inoblock]
         qin[inoblock] = 0
         qin[inoblock] = -qwall[inoblock] / ocarearat[inoblock]
-        qaice = (qis + qin)
+        qaice = qis + qin
         # convert to heat flux:
         qai = -qaice * lvrho
         # solar radiation
@@ -648,13 +647,3 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     return results
 
 # ---
-
-def main():
-    results = run_fastclimate()
-    print(results['Hi'])
-
-if __name__ == '__main__':
-    main()
-
-# ---
-
