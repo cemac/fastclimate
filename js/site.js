@@ -1,27 +1,118 @@
 'use strict';
 
-var arr = null;
+
+/** global variables: **/
+
+
+/* site variables: */
+var site_vars = {
+  /* path to data files: */
+  'data_path': 'data',
+  /* data files to load: */
+  'data_files': {
+    'area10': 'area10.json',
+    'swtop': 'swtop.json',
+    'tinit_2co2': 'tinit_2co2.json',
+    'tinit': 'tinit.json'
+  },
+  'comparewith_file': '35yearstandard.json',
+  /* data gets stored here: */
+  'data': {},
+  'comparewith': null,
+  /* python code to load: */
+  'python_path': 'fastclimate.py',
+  /* results go here: */
+  'results': null
+};
+
+
+/** functions **/
+
+
+/* data loading function: */
+async function load_data() {
+  /* check if data is already loaded: */
+  let data = site_vars['data'];
+  if (Object.keys(data).length == 0) {
+    /* data not loaded. load it. data variables: */
+    let data_path = site_vars['data_path'];
+    let data_files = site_vars['data_files'];
+    /* loop through data files: */
+    for (let key in data_files) {
+      /* url for for this data file: */
+      let data_file = data_files[key];
+      let data_url = data_path + '/' + data_file;
+      /* fetch the data: */
+      await fetch(data_url, {}).then(
+        async function(data_req) {
+          /* if successful: */
+          if (data_req.status == 200) {
+            /* store json data: */
+            site_vars['data'][key] = await data_req.json();
+          } else {
+            /* log error: */
+            console.log('* failed to load data file: ' + data_file);
+          };
+        }
+      );
+    };
+  };
+  /* check if comparison data is already loaded: */
+  let comparewith = site_vars['comparewith'];
+  if (comparewith == null) {
+    /* data not loaded. load it: */
+    let data_path = site_vars['data_path'];
+    let data_file = site_vars['comparewith_file'];
+    let data_url = data_path + '/' + data_file;
+    /* fetch the data: */
+    await fetch(data_url, {}).then(
+      async function(data_req) {
+        /* if successful: */
+        if (data_req.status == 200) {
+          /* store json data: */
+          site_vars['comparewith'] = await data_req.json();
+        } else {
+          /* log error: */
+          console.log('* failed to load data file: ' + data_file);
+        };
+      }
+    );
+  };
+  /* log a message: */
+  console.log('* loading data completed');
+  /* */
+  main();
+};
 
 async function main() {
-  var py_code = null;
+  let python_path = site_vars['python_path'];
+  let python_code = null;
   await fetch(
-    'fastclimate.py', {'cache': 'no-cache'}
+    python_path, {'cache': 'no-cache'}
   ).then(async function(data_req) {
-    py_code = await data_req.text();
+    python_code = await data_req.text();
   });
   let pyodide = await loadPyodide();
   await pyodide.loadPackage('numpy');
-  await pyodide.runPython(py_code);
+  await pyodide.runPython(python_code);
   /* */
   let defaults = pyodide.globals.get('DEFAULTS').toJs();
-  console.log('***', defaults);
-  let data = pyodide.globals.get('DATA').toJs();
-  console.log('***', data);
-//  let get_arr = pyodide.globals.get('get_arr');
-//  arr = get_arr([9.3, 2.7, 1.2]).toJs();
-//  console.log('***', arr);
+  let run_fastclimate = pyodide.globals.get('run_fastclimate');
+  let results = run_fastclimate(
+    pyodide.toPy(defaults),
+    pyodide.toPy(site_vars['data']),
+    pyodide.toPy(site_vars['comparewith'])
+  );
+  console.log('* fastclimate run completed');
+  site_vars['results'] = results.toJs();
 }
 
+
+/** listeners: **/
+
+
+/* on window load ... : */
 window.addEventListener('load', function() {
-  main();
+  /* load data: */
+  load_data();
 });

@@ -161,10 +161,10 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         if not DATA:
             # load default data files:
             data = load_data(DATA_DIR, DATA_FILES)
-            # for each data variable ... :
-            for var, value in data.items():
-                # convert to numpy array and store:
-                DATA[var] = np.array(value)
+    # load provided data. for each data variable ... :
+    for var, value in data.items():
+        # convert to numpy array and store:
+        DATA[var] = np.array(value)
     # use data from global DATA variable once data is loaded:
     data = DATA
 
@@ -176,12 +176,12 @@ def run_fastclimate(options=None, data=None, comparewith=None):
             comparewith = load_data(
                 DATA_DIR, {'comparewith': options['comparewith']}
             )['comparewith']
-            # convert comparison data to numpy arrays:
-            for var, value in comparewith.items():
-                if isinstance(value, list):
-                    COMPAREWITH[var] = np.array(value)
-                else:
-                    COMPAREWITH[var] = value
+    # convert comparison data to numpy arrays:
+    for var, value in comparewith.items():
+        if isinstance(value, list):
+            COMPAREWITH[var] = np.array(value)
+        else:
+            COMPAREWITH[var] = value
     # use data from global COMPAREWITH variable once data is loaded:
     comparewith = COMPAREWITH
 
