@@ -108,35 +108,53 @@ async function main() {
 
 
   /* contour plot test: */
-  let xtickvals = [
-    0, 30, 59, 89, 119, 150, 180, 211, 242, 272, 303, 333, 364
-  ];
-  let xticks = [
-    '           J', '           F', '           M', '           A',
-    '           M', '           J', '           J', '           A',
-    '           S', '           O', '           N', '           D', ''
-  ];
+  let x = site_vars['results']['doy'];
   let y = site_vars['results']['l'];
-  let z = site_vars['data']['swtop'];
+  let z = site_vars['results']['swtop'];
+  let xminortickvals = [
+    1, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
+  ];
+  let xtickvals = [16, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];
+  let xticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  let hovertext = [];
+  for (let i = 0; i < z[0].length; i++) {
+    hovertext[i] = [];
+    for (let j = 0; j < z.length; j++) {
+      hovertext[i][j] =
+        'Day of year: ' + x[j] + '<br>' +
+        'Latitude:' + y[i] + '<br>' +
+        'Incoming Solar Radiation (Wm⁻²):' + z[j][i].toFixed(2);
+    };
+  };
   var contour_plot = {
     'name': 'contour_swtop',
     'type': 'contour',
     'colorscale': 'Jet',
+    'x': x,
     'y': y,
     'z': z,
-    'transpose': true
+    'transpose': true,
+    'hoverinfo': 'text',
+    'text': hovertext
   };
   var contour_data = [contour_plot];
   var contour_layout = {
     'title': {
       'text': 'Incoming Solar Radiation (Wm⁻²)',
-      'y': 0.88
+      'y': 0.9
     },
     'xaxis': {
       'title': {
         'text': 'Month'
       },
+      'minor': {
+        'tickmode': 'array',
+        'ticks': 'outside',
+        'tickvals': xminortickvals,
+        'ticklen': 5
+      },
       'tickvals': xtickvals,
+      'ticklen': 0,
       'ticktext': xticks
     },
     'yaxis': {

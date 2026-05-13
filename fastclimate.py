@@ -626,6 +626,8 @@ def run_fastclimate(options=None, data=None, comparewith=None):
 
     # create dict of results:
     results = {
+        'swtop': swtop,
+        'doy': list(range(1, 366)),
         'l': l,
         'tt': tt,
         'TT': TT,
