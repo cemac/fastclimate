@@ -1,14 +1,23 @@
 <!DOCTYPE html>
+<!-- html start: __________________________________________________________ -->
 <html>
+  <!-- head start:_________________________________________________________ -->
   <head>
     <meta http-equiv="content-type"
           content="text/html; charset=utf-8">
     <meta name="viewport"
           content="width=device-width,initial-scale=1">
     <link rel="icon"
-          href="img/icon/icon.png"
+          href="./img/icon/icon.png"
           sizes="192x192">
-    <title>fastclimate</title>
+    <!-- title: ___________________________________________________________ -->
+    <title id="title">fastclimate</title>
+    <!-- styles: __________________________________________________________ -->
+    <link rel="stylesheet"
+          type="text/css"
+          href="./css/site.css"
+          media="all">
+    <!-- scripts: _________________________________________________________ -->
     <script src="js/pyodide/pyodide.js"
             charset="utf-8">
     </script>
@@ -19,10 +28,82 @@
             charset="utf-8"
             defer>
     </script>
+    <!-- meta tags: _______________________________________________________ -->
+    <meta id="meta_title"
+          name="title"
+          content="fastclimate">
+    <meta id="meta_desc"
+          name="description"
+          content="fastclimate">
+    <meta id="twit_card"
+          name="twitter:card"
+          content="summary_large_image">
+    <meta id="twit_title"
+          name="twitter:title"
+          content="fastclimate">
+    <meta id="twit_desc"
+          name="twitter:description"
+          content="fastclimate">
+    <meta id="twit_img"
+          name="twitter:image"
+          content="img/logo/logo.png">
+    <meta id="og_type"
+          name="og:type"
+          content="website">
+    <meta id="og_title"
+          name="og:title"
+          content="fastclimate">
+    <meta id="og_desc"
+          name="og:description"
+          content="fastclimate">
+    <meta id="og_img"
+          name="og:image"
+          content="img/logo/logo.png">
+  <!-- head end:___________________________________________________________ -->
   </head>
+  <!-- body start: ________________________________________________________ -->
   <body>
-
-    <div id="plot" style="height: 600px; width: 800px;"></div>
-
+    <!-- container start: _________________________________________________ -->
+    <div id="container"
+         class="container column">
+      <!-- header: ________________________________________________________ -->
+      <div id="header"
+           class="header row flex_justify flex_no_grow">
+        <img id="header_img"
+             class="header_image"
+             src='img/logo/logo.png'>
+        <div id="header_text"
+             class="header_text">
+          <span id="title_a">fastclimate</span>
+        </div>
+        <!-- navigation links: ________________________________________ -->
+        <div id="header_navigation"
+             class="header_navigation">
+          <span id="link_home">Home</span> |
+          <a href="about.html"><span id="link_about">About</span></a>
+        </div>
+      </div>
+      <!-- content container: _____________________________________________ -->
+      <div id="content"
+            class="content row">
+        <!-- content: _____________________________________________________ -->
+        <div id="content_content"
+             class="content_content column">
+          <!-- plots: ______________________________________________________ -->
+          <div id="content_plots"
+               class="content_plots row_wrap flex_start">
+            <div id="plot" class="content_plot flex_grow"></div>
+          </div>
+        <!-- content end: _________________________________________________ -->
+        </div>
+      </div>
+      <!-- footer: ________________________________________________________ -->
+      <div id="footer"
+           class="footer row_wrap flex_end flex_no_grow">
+      </div>
+    <!-- container end: ___________________________________________________ -->
+    </div>
+  <!-- body end: __________________________________________________________ -->
   </body>
+<!-- html end: ____________________________________________________________ -->
 </html>

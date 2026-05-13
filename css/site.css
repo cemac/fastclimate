@@ -1,0 +1,283 @@
+/** flex classes: **/
+
+.row,
+.row_wrap,
+.column,
+.column_wrap {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.row {
+  flex-flow: row nowrap;
+}
+
+.row_wrap {
+  flex-flow: row wrap;
+}
+
+.column {
+  flex-flow: column nowrap;
+}
+
+.column_wrap {
+  flex-flow: column wrap;
+}
+
+.flex_center {
+  justify-content: center;
+}
+
+.flex_start {
+  justify-content: flex-start;
+}
+
+.flex_end {
+  justify-content: flex-end;
+}
+
+.flex_justify {
+  justify-content: space-between;
+}
+
+.flex_grow {
+  flex: 1 1 auto;
+}
+
+.flex_no_grow {
+  flex: 0 1 auto;
+}
+
+/** body: **/
+
+body {
+  background-color: #938b9a;;
+  margin: 0;
+  padding: 0;
+  font-family: "open Sans", "Arial", "Helvetica", sans-serif;
+}
+
+/** headers: **/
+
+h4 a {
+  text-decoration: none;
+}
+
+/** main container: **/
+
+.container {
+  min-height: 100vh;
+  max-width: 1850px;
+  margin: auto;
+}
+
+/** header: **/
+
+.header {
+  background-color: #0030a2;
+  height: 5.5em;
+  box-shadow: 0 0.4em 0.8em 0 rgba(0, 0, 0, 0.2),
+              0 0.6em 2em 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: auto;
+}
+
+.header_image {
+  max-height: 4em;
+  margin: 1em;
+  margin-bottom: 0.5em;
+}
+
+.header a {
+  color: #80c41c;
+  text-decoration: none;
+}
+
+@media only screen and (min-width: 1800px) {
+  .header {
+    margin-top: 0.4em;
+    margin-left: 0.3em;
+    margin-right: 0.3em;
+    border-radius: 1.1em 1.1em 0em 0em;
+  }
+}
+
+.header_text {
+  color: #ffffff;
+  font-family: Roboto, sans-serif;
+  font-size: 1.7em;
+  margin-left: 0em;
+  margin-right: 0.2em;
+  margin-top: auto;
+  margin-bottom: 0.4em;
+  flex-basis: 90%;
+}
+
+@media only screen and (max-width: 850px) {
+  .header_text {
+    font-size: 1.4em;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .header_text {
+    display: none;
+  }
+}
+
+/** navigation links: **/
+
+.header_navigation {
+  color: #ffffff;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 2.5em;
+  margin-right: 1.5em;
+  text-align: right;
+  text-wrap: nowrap;
+}
+
+@media only screen and (max-width: 550px) {
+  .header_navigation {
+    margin-right: 0.5em;
+  }
+}
+
+.header_navigation a,
+.header_navigation a:visited {
+  color: #9999cc;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.header_navigation a:hover {
+  color: #ccccff;
+}
+
+/** content: **/
+
+.content {
+  color: #000000;
+  background-color: #ffffff;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+  box-shadow: 0 0.4em 0.8em 0 rgba(0, 0, 0, 0.2),
+              0 0.6em 2em 0 rgba(0, 0, 0, 0.19);
+}
+
+@media only screen and (min-width: 1800px) {
+  .content {
+    margin-left: 0.3em;
+    margin-right: 0.3em;
+  }
+}
+
+.content a,
+.content a:visited {
+  color: #ffffff;
+}
+
+/** text: **/
+
+.content_text {
+  margin-left: 2em;
+  margin-right: 2em;
+  margin-bottom: 1em;
+  max-width: 49em;
+  padding-right: 0.8em;
+  padding-bottom: 3em;
+}
+
+.content_text a,
+.content_text a:visited {
+  color: #ffffff;
+}
+
+/** plots: **/
+
+.content_plots {
+  margin: 0.5em;
+  min-height: 35em;
+}
+
+.content_plot {
+  margin: 0.5em;
+  min-height: 35em;
+  max-width: 49%;
+  flex-basis: 33%;
+}
+
+@media only screen and (max-width: 900px) {
+  .content_plot {
+    min-height: 30em;
+    max-width: 99%;
+    flex-basis: 51%;
+  }
+}
+
+/** footer: **/
+
+.footer {
+  background-color: #3c3c3c;
+  height: 3.5em;
+  margin-top: auto;
+  box-shadow: 0 0.4em 0.8em 0 rgba(0, 0, 0, 0.2),
+              0 0.6em 2em 0 rgba(0, 0, 0, 0.19);
+}
+
+.footer_logo {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  max-height: 3em;
+  margin: 0.25em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+@media only screen and (min-width: 1800px) {
+  .footer {
+    margin-bottom: 1em;
+    margin-left: 0.3em;
+    margin-right: 0.3em;
+    border-radius: 0em 0em 0.5em 0.5em;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .footer {
+    flex: 1 1 auto;
+    max-height: 2.5em;
+    min-height: 2.5em;
+  }
+  .footer_logo {
+    max-height: 2em;
+  }
+}
+
+.footer_item {
+  display: inline-block;
+}
+
+@media only screen and (max-width: 330px) {
+  .footer_item_hide {
+    display: none;
+  }
+}
+
+.footer_links {
+  flex-basis: 99%;
+  text-align: center;
+}
+
+.footer_link {
+  color: #fdfdfd;
+  text-decoration: none;
+}
+
+/** buttons: **/
+
+/* remove outlines from active buttons: */
+button, button:focus, button:active {
+  outline: 0;
+}
+:focus {outline:none;}
+::-moz-focus-inner {border:0;}
