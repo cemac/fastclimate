@@ -161,10 +161,11 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         if not DATA:
             # load default data files:
             data = load_data(DATA_DIR, DATA_FILES)
-    # load provided data. for each data variable ... :
-    for var, value in data.items():
-        # convert to numpy array and store:
-        DATA[var] = np.array(value)
+    if data is not None:
+        # load provided data. for each data variable ... :
+        for var, value in data.items():
+            # convert to numpy array and store:
+            DATA[var] = np.array(value)
     # use data from global DATA variable once data is loaded:
     data = DATA
 
@@ -176,12 +177,13 @@ def run_fastclimate(options=None, data=None, comparewith=None):
             comparewith = load_data(
                 DATA_DIR, {'comparewith': options['comparewith']}
             )['comparewith']
-    # convert comparison data to numpy arrays:
-    for var, value in comparewith.items():
-        if isinstance(value, list):
-            COMPAREWITH[var] = np.array(value)
-        else:
-            COMPAREWITH[var] = value
+    if comparewith is not None:
+        # convert comparison data to numpy arrays:
+        for var, value in comparewith.items():
+            if isinstance(value, list):
+                COMPAREWITH[var] = np.array(value)
+            else:
+                COMPAREWITH[var] = value
     # use data from global COMPAREWITH variable once data is loaded:
     comparewith = COMPAREWITH
 
@@ -624,29 +626,29 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     TTsocean -= 273.16
     TTsavg -= 273.16
 
-    # create dict of results:
-    results = {
-        'swtop': swtop,
+    # create dict for storing result:
+    result = {
+        'swtop': swtop.T,
         'doy': list(range(1, 366)),
         'l': l,
         'tt': tt,
-        'TT': TT,
-        'TTsland': TTsland,
-        'TTocean': TTocean,
-        'TTsocean': TTsocean,
-        'TTsavg': TTsavg,
-        'Qs': Qs,
-        'Qa': Qa,
-        'Qatm': Qatm,
-        'Qice': Qice,
-        'Qall': Qall,
-        'Qmelt': Qmelt,
-        'Albocean': Albocean,
-        'Lw': Lw,
-        'Alpha': Alpha,
-        'Hi': Hi
+        'TT': TT.T,
+        'TTsland': TTsland.T,
+        'TTocean': TTocean.T,
+        'TTsocean': TTsocean.T,
+        'TTsavg': TTsavg.T,
+        'Qs': Qs.T,
+        'Qa': Qa.T,
+        'Qatm': Qatm.T,
+        'Qice': Qice.T,
+        'Qall': Qall.T,
+        'Qmelt': Qmelt.T,
+        'Albocean': Albocean.T,
+        'Lw': Lw.T,
+        'Alpha': Alpha.T,
+        'Hi': Hi.T
     }
-    # return the results:
-    return results
+    # return the result:
+    return result
 
 # ---

@@ -21,8 +21,8 @@ var site_vars = {
   'comparewith': null,
   /* python code to load: */
   'python_path': 'fastclimate.py',
-  /* results go here: */
-  'results': null
+  /* result goes here: */
+  'result': null
 };
 
 
@@ -98,32 +98,32 @@ async function main() {
   /* */
   let defaults = pyodide.globals.get('DEFAULTS').toJs();
   let run_fastclimate = pyodide.globals.get('run_fastclimate');
-  let results = run_fastclimate(
+  let result = run_fastclimate(
     pyodide.toPy(defaults),
     pyodide.toPy(site_vars['data']),
     pyodide.toPy(site_vars['comparewith'])
   );
   console.log('* fastclimate run completed');
-  site_vars['results'] = results.toJs();
+  site_vars['result'] = result.toJs();
 
 
   /* contour plot test: */
-  let x = site_vars['results']['doy'];
-  let y = site_vars['results']['l'];
-  let z = site_vars['results']['swtop'];
+  let x = site_vars['result']['doy'];
+  let y = site_vars['result']['l'];
+  let z = site_vars['result']['swtop'];
   let xminortickvals = [
     1, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
   ];
   let xtickvals = [16, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];
   let xticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
   let hovertext = [];
-  for (let i = 0; i < z[0].length; i++) {
+  for (let i = 0; i < z.length; i++) {
     hovertext[i] = [];
-    for (let j = 0; j < z.length; j++) {
+    for (let j = 0; j < z[i].length; j++) {
       hovertext[i][j] =
         'Day of year: ' + x[j] + '<br>' +
         'Latitude:' + y[i] + '<br>' +
-        'Incoming Solar Radiation (Wm⁻²):' + z[j][i].toFixed(2);
+        'Incoming Solar Radiation (Wm⁻²):' + z[i][j].toFixed(2);
     };
   };
   var contour_plot = {
@@ -133,7 +133,6 @@ async function main() {
     'x': x,
     'y': y,
     'z': z,
-    'transpose': true,
     'hoverinfo': 'text',
     'text': hovertext
   };
