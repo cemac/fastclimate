@@ -105,6 +105,61 @@ async function main() {
   );
   console.log('* fastclimate run completed');
   site_vars['results'] = results.toJs();
+
+
+  /* contour plot test: */
+  let xtickvals = [
+    0, 30, 59, 89, 119, 150, 180, 211, 242, 272, 303, 333, 364
+  ];
+  let xticks = [
+    '           J', '           F', '           M', '           A',
+    '           M', '           J', '           J', '           A',
+    '           S', '           O', '           N', '           D', ''
+  ];
+  let y = site_vars['results']['l'];
+  let z = site_vars['data']['swtop'];
+  var contour_plot = {
+    'name': 'contour_swtop',
+    'type': 'contour',
+    'colorscale': 'Jet',
+    'y': y,
+    'z': z,
+    'transpose': true
+  };
+  var contour_data = [contour_plot];
+  var contour_layout = {
+    'title': {
+      'text': 'Incoming Solar Radiation (Wm⁻²)',
+      'y': 0.88
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Month'
+      },
+      'tickvals': xtickvals,
+      'ticktext': xticks
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Latitude'
+      }
+    }
+  };
+  var contour_conf = {
+    'showLink': false,
+    'linkText': '',
+    'displaylogo': false,
+    'modeBarButtonsToRemove': [
+      'autoScale2d',
+      'lasso2d',
+      'toggleSpikelines',
+      'select2d'
+    ],
+    'responsive': true
+  };
+  Plotly.newPlot('plot', contour_data, contour_layout, contour_conf);
+  /* */
+
 }
 
 

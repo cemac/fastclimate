@@ -626,6 +626,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
 
     # create dict of results:
     results = {
+        'l': l,
         'tt': tt,
         'TT': TT,
         'TTsland': TTsland,
