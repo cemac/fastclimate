@@ -144,7 +144,7 @@ def load_data(data_dir, data_files):
     data = {}
     for var, data_file in data_files.items():
         data_path = os.sep.join([data_dir, data_file])
-        with open(data_path, 'r') as data_json:
+        with open(data_path, 'r', encoding='utf-8') as data_json:
             data[var] = json.load(data_json)
     return data
 
@@ -626,11 +626,22 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     TTsocean -= 273.16
     TTsavg -= 273.16
 
+    # get indices ready to plot last year and compare for contour and
+    # latitudinal plots.
+    # Thses assume dtday and savestep are the same in this run and reference
+    # case (dtday=1; savestep=10) for Leeds web implementation.
+    # indices for this run:
+    cnplot = round((365 / (savestep * dtday) + 0.0000001))
+    # last year only:
+    cnit = np.arange(it - cnplot - 1, it)
+
     # create dict for storing result:
     result = {
         'swtop': swtop.T,
         'doy': list(range(1, 366)),
         'l': l,
+        'cnplot': cnplot,
+        'cnit': cnit,
         'tt': tt,
         'TT': TT.T,
         'TTsland': TTsland.T,

@@ -108,15 +108,15 @@ async function main() {
 
 
   /* contour plot test: */
-  let x = site_vars['result']['doy'];
-  let y = site_vars['result']['l'];
-  let z = site_vars['result']['swtop'];
-  let xminortickvals = [
+  var x = site_vars['result']['doy'];
+  var y = site_vars['result']['l'];
+  var z = site_vars['result']['swtop'];
+  var xminortickvals = [
     1, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
   ];
-  let xtickvals = [16, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];
-  let xticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
-  let hovertext = [];
+  var xtickvals = [16, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];
+  var xticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  var hovertext = [];
   for (let i = 0; i < z.length; i++) {
     hovertext[i] = [];
     for (let j = 0; j < z[i].length; j++) {
@@ -152,6 +152,7 @@ async function main() {
         'tickvals': xminortickvals,
         'ticklen': 5
       },
+      'range': [1, 366],
       'tickvals': xtickvals,
       'ticklen': 0,
       'ticktext': xticks
@@ -174,7 +175,93 @@ async function main() {
     ],
     'responsive': true
   };
-  Plotly.newPlot('plot', contour_data, contour_layout, contour_conf);
+  Plotly.newPlot('swtop_plot', contour_data, contour_layout, contour_conf);
+  /* */
+
+  /* contour plot test: */
+  var y = site_vars['result']['l'];
+  var TTsavg = site_vars['result']['TTsavg'];
+  var cnit = site_vars['result']['cnit'];
+  var xi = [];
+  var x = [];
+  var z = [];
+  for (let i = 0; i < TTsavg.length; i++) {
+    z[i] = [];
+    for (let j = 0; j < cnit.length; j++) {
+      z[i][j] = TTsavg[i][cnit[j]];
+      x[j] = Math.round(((j + 1) / cnit.length) * 365);
+      if (j == 0) {
+        xi[j] = 1;
+      } else {
+        xi[j] = x[j];
+      };
+    };
+  };
+  var xminortickvals = [
+    1, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
+  ];
+  var xtickvals = [16, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];
+  var xticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  var hovertext = [];
+  for (let i = 0; i < z.length; i++) {
+    hovertext[i] = [];
+    for (let j = 0; j < z[i].length; j++) {
+      hovertext[i][j] =
+        'Day of year: ' + x[j] + '<br>' +
+        'Latitude:' + y[i] + '<br>' +
+        'Surface Temperature (°C):' + z[i][j].toFixed(2);
+    };
+  };
+  var contour_plot = {
+    'name': 'contour_TTsavg',
+    'type': 'contour',
+    'colorscale': 'Jet',
+    'x': xi,
+    'y': y,
+    'z': z,
+    'hoverinfo': 'text',
+    'text': hovertext
+  };
+  var contour_data = [contour_plot];
+  var contour_layout = {
+    'title': {
+      'text': 'Surface Temperature (°C)',
+      'y': 0.9
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Month'
+      },
+      'minor': {
+        'tickmode': 'array',
+        'ticks': 'outside',
+        'tickvals': xminortickvals,
+        'ticklen': 5
+      },
+      'range': [1, 366],
+      'tickvals': xtickvals,
+      'ticklen': 0,
+      'ticktext': xticks
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Latitude'
+      }
+    }
+  };
+  var contour_conf = {
+    'showLink': false,
+    'linkText': '',
+    'displaylogo': false,
+    'modeBarButtonsToRemove': [
+      'autoScale2d',
+      'lasso2d',
+      'toggleSpikelines',
+      'select2d'
+    ],
+    'responsive': true
+  };
+  Plotly.newPlot('TTsavg_plot', contour_data, contour_layout, contour_conf);
   /* */
 
 }
