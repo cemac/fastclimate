@@ -145,11 +145,19 @@ var site_vars = {
     },
     'Khicefactor': {
       'section': 'Advection coefficients',
-      'label': '<tt>Khicefactor</tt> × <tt>Kho1</tt> = Horizontal advection parameter for sea ice',
+      'label': '<tt>Khicefactor × Kho1</tt> = Horizontal advection parameter for sea ice',
       'units': 'm³K/J',
       'min': 0,
       'max': 2e-7,
       'default': 3.3e-8
+    },
+    'Va1': {
+      'section': 'Advection coefficients',
+      'label': 'Minimum <tt>T<sub>surface</sub> − T<sub>500mb</sub></tt> for vertical advection (convection)',
+      'units': '°C or K',
+      'min': 10,
+      'max': 50,
+      'default': 26
     },
 
 
@@ -341,12 +349,12 @@ function add_options() {
     site_vars['options'][option]['error_el'] = option_error_el;
     site_vars['options'][option]['note_el'] = option_note_el;
     /* set label: */
-    let option_label_html = option_label;
-    option_label_html += ' (<tt>' + option + '</tt>)';
+    let option_label_html = '<tt>' + option + '</tt>: ';
+    option_label_html += option_label;
     if ((option_units != null) & (option_units != undefined)) {
-      option_label_html += ', ' + option_units;
+      option_label_html += ',&nbsp; <tt>' + option_units + '</tt>';
     };
-    option_label_html += ', <tt>' + option_min + '</tt> to <tt>' +
+    option_label_html += ',&nbsp; <tt>' + option_min + '</tt> to <tt>' +
                          option_max + '</tt>';
     option_label_el.innerHTML = option_label_html;
     /* set value: */
