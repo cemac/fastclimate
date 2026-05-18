@@ -76,7 +76,7 @@
              class="header_text">
           <span id="title_a">fastclimate</span>
         </div>
-        <!-- navigation links: ________________________________________ -->
+        <!-- navigation links: ____________________________________________ -->
         <div id="header_navigation"
              class="header_navigation">
           <span id="link_home">Home</span> |
@@ -91,14 +91,13 @@
              class="content_content column">
 
 
-          <!-- model options: ______________________________________________ -->
+          <!-- model options: _____________________________________________ -->
           <div class="content_text column">
             <h3>Initial conditions</h3>
           </div>
           <div id="content_options"
                class="content_options content_text column">
-
-
+            <!-- toffset: _________________________________________________ -->
             <div id="option_toffset"
                class="content_option row_wrap">
               <label id="option_toffset_label"
@@ -110,9 +109,26 @@
                      type="text"
                      maxlength="10"
                      name="toffset"
-                     value="0">
+                     value="">
             </div>
             <div id="option_toffset_error"
+                 class="option_error">
+            </div>
+            <!-- iceoffset: _______________________________________________ -->
+            <div id="option_iceoffset"
+               class="content_option row_wrap">
+              <label id="option_iceoffset_label"
+                     class="option_label">
+                Initial ice thickness offsets (<tt>iceoffset</tt>), m (metres), <tt>-50</tt> to <tt>50</tt>
+              </label>
+              <input id="option_iceoffset_value"
+                     class="option_text option_value"
+                     type="text"
+                     maxlength="10"
+                     name="iceoffset"
+                     value="">
+            </div>
+            <div id="option_iceoffset_error"
                  class="option_error">
             </div>
 

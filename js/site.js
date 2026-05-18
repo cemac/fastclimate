@@ -16,25 +16,35 @@ var site_vars = {
     'tinit': 'tinit.json'
   },
   'comparewith_file': '35yearstandard.json',
+  /* model options informations: */
+  'options': {
+    'toffset': {
+      'label_el': document.getElementById('option_toffset_label'),
+      'value_el': document.getElementById('option_toffset_value'),
+      'error_el': document.getElementById('option_toffset_error'),
+      'label': 'Initial Temperature offsets',
+      'units': '°C or K',
+      'min': -100,
+      'max': 100,
+      'default': 0
+    },
+    'iceoffset': {
+      'label_el': document.getElementById('option_iceoffset_label'),
+      'value_el': document.getElementById('option_iceoffset_value'),
+      'error_el': document.getElementById('option_iceoffset_error'),
+      'label': 'Initial ice thickness offsets',
+      'units': 'm (metres)',
+      'min': -50,
+      'max': 50,
+      'default': 0
+    }
 
 
-  /* model option elements: */
-  'option_els': {
-    'toffset': document.getElementById('option_toffset_value'),
-    'toffset_error': document.getElementById('option_toffset_error')
   },
-
-
-  /* model options: */
-  'model_options': {
-    'toffset': 0
-
-
-  },
+  /* model options values stored here: */
+  'model_options': {},
   /* variable to indicate if options are o.k.: */
   'model_options_ok': true,
-
-
   /* data gets stored here: */
   'data': {},
   'comparewith': null,
@@ -94,40 +104,46 @@ function validate_options() {
   site_vars['model_options_ok'] = true;
   /* option elements: */
   let option_els = site_vars['option_els'];
-  /* default input border color: */
-  let input_border_ok = '#989898';
-  /* input border color on error: */
-  let input_border_err = '#ee3333';
+  /* default option border color: */
+  let option_border_ok = '#989898';
+  /* option border color on error: */
+  let option_border_err = '#ee3333';
   /* run button element: */
-//  let input_run_button = option_els['run_button'];
-  /* toffset ... get value: */
-  let toffset_el = option_els['toffset'];
-  let toffset_value = toffset_el.value;
-  /* error element: */
-  let toffset_error_el = option_els['toffset_error'];
-  toffset_error_el.innerHTML = '';
-  /* check value: */
-  let check_value = check_numeric('Temperature offsets', toffset_value, -100, 100);
-  /* if o.k., store value: */
-  if (check_value['status'] == true) {
-    site_vars['model_options']['toffset'] = parseFloat(toffset_value);
-    toffset_error_el.style.display = 'none';
-    toffset_el.style.borderColor = input_border_ok;
-  } else {
-    /* not o.k.: */
-    site_vars['model_options_ok'] = false;
-    toffset_error_el.innerHTML = check_value['message'];
-    toffset_error_el.style.display = 'inline';
-    toffset_el.style.borderColor = input_border_err;
+//  let option_run_button = option_els['run_button'];
+  /* get option information from site_vars: */
+  let options = site_vars['options'];
+  /* loop through options: */
+  for (let option in options) {
+    /* get values for the option: */
+    let my_options = options[option];
+    let option_el = my_options['value'];
+    let option_value = option_el.value;
+    let option_error_el = my_options['error'];
+    let option_default = my_options['default'];
+    let option_label = my_options['label'];
+    let option_min = my_options['min'];
+    let option_max = my_options['max'];
+    /* check value: */
+    let check_value = check_numeric(option_label, option_value, option_min, option_max);
+    /* if o.k., store value: */
+    if (check_value['status'] == true) {
+      site_vars['model_options'][option] = parseFloat(option_value);
+      option_error_el.style.display = 'none';
+      option_el.style.borderColor = option_border_ok;
+    } else {
+      /* not o.k.: */
+      site_vars['model_options_ok'] = false;
+      option_error_el.innerHTML = check_value['message'];
+      option_error_el.style.display = 'inline';
+      option_el.style.borderColor = option_border_err;
+    };
   };
-
-
-  /* if optoins are o.k., enable button: */
-//  if (site_vars['model_options_ok'] == true) {
+  /* if options are o.k., enable button: */
+  if (site_vars['model_options_ok'] == true) {
 //    input_run_button.removeAttribute('disabled');
-//  } else {
+  } else {
 //    input_run_button.setAttribute('disabled', true);
-//  };
+  };
 };
 
 /* add input listeners: */
@@ -149,6 +165,36 @@ function add_listeners() {
 //  option_run_button.addEventListener('click', run_model);
 };
 
+/* set initial option values: */
+function  set_option_values() {
+  /* get option information from site_vars: */
+  let options = site_vars['options'];
+  /* loop through options: */
+  for (let option in options) {
+    /* get values for the option: */
+    let my_options = options[option];
+    let option_label_el = my_options['label_el'];
+    let option_value_el = my_options['value_el'];
+    let option_label = my_options['label'];
+    let option_units = my_options['units'];
+    let option_min = my_options['min'];
+    let option_max = my_options['max'];
+    let option_default = my_options['default'];
+    /* set label: */
+    let option_label_html = option_label;
+    option_label_html += ' (<tt>' + option + '</tt>)';
+    if ((option_units != null) & (option_units != undefined)) {
+      option_label_html += ', ' + option_units;
+    };
+    option_label_html += ', <tt>' + option_min + '</tt> to <tt>' +
+                         option_max + '</tt>';
+    option_label_el.innerHTML = option_label_html;
+    /* set value: */
+    option_value_el.value = option_default;
+  };
+  /* add listeners to various elements: */
+  add_listeners();
+};
 
 /* data loading function: */
 async function load_data() {
@@ -393,8 +439,8 @@ async function main() {
 
 /* on window load ... : */
 window.addEventListener('load', function() {
-  /* add listeners to various elements: */
-  add_listeners();
+  /* set initial option values: */
+  set_option_values();
   /* load data: */
 //  load_data();
 });

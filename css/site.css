@@ -182,7 +182,7 @@ h4 a {
   margin-left: 2em;
   margin-right: 2em;
   margin-bottom: 1em;
-  max-width: 49em;
+  max-width: 51em;
   padding-right: 0.8em;
   padding-bottom: 3em;
 }
@@ -205,7 +205,7 @@ h4 a {
 
 .option_label {
   background-color: #f7f9fb;
-  min-width: 27em;
+  min-width: 30em;
   padding: 0.5em;
   margin: 0.5em;
 }
