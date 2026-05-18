@@ -17,11 +17,10 @@ var site_vars = {
   },
   'comparewith_file': '35yearstandard.json',
   /* model options informations: */
+  'options_el': document.getElementById('content_options'),
   'options': {
     'toffset': {
-      'label_el': document.getElementById('option_toffset_label'),
-      'value_el': document.getElementById('option_toffset_value'),
-      'error_el': document.getElementById('option_toffset_error'),
+      'section': 'Initial conditions',
       'label': 'Initial Temperature offsets',
       'units': '°C or K',
       'min': -100,
@@ -29,17 +28,21 @@ var site_vars = {
       'default': 0
     },
     'iceoffset': {
-      'label_el': document.getElementById('option_iceoffset_label'),
-      'value_el': document.getElementById('option_iceoffset_value'),
-      'error_el': document.getElementById('option_iceoffset_error'),
+      'section': 'Initial conditions',
       'label': 'Initial ice thickness offsets',
       'units': 'm (metres)',
       'min': -50,
       'max': 50,
       'default': 0
+    },
+    'co2': {
+      'section': 'CO₂ concentration',
+      'label': 'Simulated CO2 concentration (1=today)',
+      'units': null,
+      'min': 0.1,
+      'max': 10,
+      'default': 1.0
     }
-
-
   },
   /* model options values stored here: */
   'model_options': {},
@@ -166,20 +169,56 @@ function add_listeners() {
 };
 
 /* set initial option values: */
-function  set_option_values() {
+function add_options() {
+  /* get main options element: */
+  let options_el = site_vars['options_el'];
   /* get option information from site_vars: */
   let options = site_vars['options'];
+  /* initialise option section value: */
+  let options_section = '';
   /* loop through options: */
   for (let option in options) {
     /* get values for the option: */
     let my_options = options[option];
-    let option_label_el = my_options['label_el'];
-    let option_value_el = my_options['value_el'];
+    let option_section = my_options['section'];
     let option_label = my_options['label'];
     let option_units = my_options['units'];
     let option_min = my_options['min'];
     let option_max = my_options['max'];
     let option_default = my_options['default'];
+    /* create html elements for section header, if required: */
+    if (option_section != options_section) {
+      let section_header_el = document.createElement('h4');
+      section_header_el.classList = 'option_header';
+      section_header_el.innerHTML = option_section;
+      options_el.appendChild(section_header_el);
+      options_section = option_section;
+    };
+    /* create html elements for option: */
+    let option_el = document.createElement('div');
+    option_el.id = 'option_' + option;
+    option_el.classList = 'content_option row_wrap';
+    let option_label_el = document.createElement('label');
+    option_label_el.id = 'option_' + option + '_label';
+    option_label_el.classList = 'option_label';
+    let option_value_el = document.createElement('input');
+    option_value_el.id = 'option_' + option + '_value';
+    option_value_el.classList = 'option_text option_value';
+    option_value_el.type = 'text';
+    option_value_el.maxLength = 10;
+    option_value_el.name = option;
+    let option_error_el = document.createElement('div');
+    option_error_el.id = 'option_' + option + '_error';
+    option_error_el.classList = 'option_error';
+    /* add elements to page: */
+    option_el.appendChild(option_label_el);
+    option_el.appendChild(option_value_el);
+    options_el.appendChild(option_el);
+    options_el.appendChild(option_error_el);
+    /* store elementS: */
+    site_vars['options'][option]['label_el'] = option_label_el;
+    site_vars['options'][option]['value_el'] = option_value_el;
+    site_vars['options'][option]['error_el'] = option_error_el;
     /* set label: */
     let option_label_html = option_label;
     option_label_html += ' (<tt>' + option + '</tt>)';
@@ -439,8 +478,8 @@ async function main() {
 
 /* on window load ... : */
 window.addEventListener('load', function() {
-  /* set initial option values: */
-  set_option_values();
+  /* add options inputs: */
+  add_options();
   /* load data: */
 //  load_data();
 });

@@ -194,13 +194,22 @@ h4 a {
 
 /** model options: **/
 
+.content_options_header {
+  margin-left: 1em;
+}
+
 .content_option {
-  margin: 0.3em;
+  margin: 0.1em;
   font-size: 1.1em;
 }
 
 .content_option tt {
   font-size: 1.2em;
+}
+
+.option_header {
+  margin: 0em;
+  margin-top: 1em;
 }
 
 .option_label {
