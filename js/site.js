@@ -159,6 +159,64 @@ var site_vars = {
       'max': 50,
       'default': 26
     },
+    'Kva': {
+      'section': 'Advection coefficients',
+      'label': 'Vertical advection transfer coefficient',
+      'units': 'J/s/m²/K',
+      'min': 0,
+      'max': 100,
+      'default': 35
+    },
+    'Kicethick': {
+      'section': 'Sea ice parameters',
+      'label': 'Thick sea ice vertical heat transfer coefficient, includes snow',
+      'units': 'J/s/m/K',
+      'min': 0.02,
+      'max': 2.5,
+      'default': 0.8
+    },
+    'Kicethin': {
+      'section': 'Sea ice parameters',
+      'label': 'Thin sea ice vertical heat transfer coefficient, assumes no snow',
+      'units': 'J/s/m/K',
+      'min': 0.5,
+      'max': 3,
+      'default': 2
+    },
+    'zicethick': {
+      'section': 'Sea ice parameters',
+      'label': 'no albedo or heat heat transfer coefficient changes at thicker ice',
+      'units': 'm',
+      'min': 0,
+      'max': 3,
+      'default': 0.5
+    },
+    'leadfraction': {
+      'section': 'Sea ice parameters',
+      'label': 'equivalent open water in pack ice',
+      'units': 'fraction',
+      'min': 0,
+      'max': 1,
+      'default': 0.05
+    },
+    'Csl': {
+      'section': 'Surface/ABL heat capacities',
+      'label': 'ABL and soil heat capacity',
+      'units': 'J/m²/K',
+      'min': 2e4,
+      'max': 1e8,
+      'default': 4e6,
+      'note': '* Decrease <tt>dtday</tt> for <tt>Csl</tt> < <tt>2e6</tt>'
+    },
+    'Css': {
+      'section': 'Surface/ABL heat capacities',
+      'label': 'ABL heat capacity alone (or with snow surface)',
+      'units': 'J/m²/K',
+      'min': 2e4,
+      'max': 1e8,
+      'default': 2e6,
+      'note': '* Decrease <tt>dtday</tt> for <tt>Css</tt> < <tt>2e6</tt>'
+    },
 
 
   },
