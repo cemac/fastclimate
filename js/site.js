@@ -266,6 +266,13 @@ var site_vars = {
       'default': 2
     }
   },
+  /* model running elements: */
+  'run_button_el': document.getElementById('content_run_button'),
+  'run_button_display': null,
+  'model_spinner_el': document.getElementById('content_model_spinner'),
+  /* plot container element: */
+  'plot_container_el': document.getElementById('content_plots'),
+  'plot_container_el_display': null,
   /* model options values stored here: */
   'model_options': {},
   /* variable to indicate if options are o.k.: */
@@ -333,10 +340,10 @@ function validate_options() {
   let option_border_ok = '#989898';
   /* option border color on error: */
   let option_border_err = '#ee3333';
-  /* run button element: */
-//  let option_run_button = option_els['run_button'];
   /* get option information from site_vars: */
   let options = site_vars['options'];
+  /* run button element: */
+  let run_button_el = site_vars['run_button_el'];
   /* loop through options: */
   for (let option in options) {
     /* get values for the option: */
@@ -365,9 +372,9 @@ function validate_options() {
   };
   /* if options are o.k., enable button: */
   if (site_vars['model_options_ok'] == true) {
-//    input_run_button.removeAttribute('disabled');
+    run_button_el.removeAttribute('disabled');
   } else {
-//    input_run_button.setAttribute('disabled', true);
+    run_button_el.setAttribute('disabled', true);
   };
 };
 
@@ -384,10 +391,10 @@ function add_listeners() {
     option_value.addEventListener('input', validate_options);
     option_value.addEventListener('propertychange', validate_options);
   };
-//  /* add run button listener: */
-//  let option_run_button = option_els['run_button'];
-//  /* add click listener: */
-//  option_run_button.addEventListener('click', run_model);
+  /* add run button listener: */
+  let run_button_el = site_vars['run_button_el'];
+  /* add click listener: */
+  run_button_el.addEventListener('click', load_data);
 };
 
 /* set initial option values: */
@@ -468,8 +475,33 @@ function add_options() {
   add_listeners();
 };
 
+/* element hiding function: */
+function hide_elements() {
+  /* plot containiner element: */
+  let plot_container_el = site_vars['plot_container_el'];
+  /* get display value: */
+  site_vars['plot_container_el_display'] = plot_container_el.style.display;
+  /* hide the element: */
+  plot_container_el.style.display = 'none';
+};
+
+
 /* data loading function: */
 async function load_data() {
+
+
+  /* run button element: */
+  let run_button_el = site_vars['run_button_el'];
+  site_vars['run_button_display'] = run_button_el.style.display;
+  /* model spinner element: */
+  let model_spinner_el = site_vars['model_spinner_el'];
+  /* disable run button: */
+  run_button_el.setAttribute('disabled', true);
+  run_button_el.style.display = 'none';
+  /* enable spinner: */
+  model_spinner_el.style.display = 'inline';
+
+
   /* check if data is already loaded: */
   let data = site_vars['data'];
   if (Object.keys(data).length == 0) {
@@ -544,6 +576,22 @@ async function main() {
   );
   console.log('* fastclimate run completed');
   site_vars['result'] = result.toJs();
+
+
+  /* model spinner element: */
+  let model_spinner_el = site_vars['model_spinner_el'];
+  /* run button element: */
+  let run_button_el = site_vars['run_button_el'];
+  /* enable spinner: */
+  model_spinner_el.style.display = 'none';
+  /* enable run button: */
+  run_button_el.removeAttribute('disabled');
+  run_button_el.style.display = site_vars['run_button_display'];
+
+  /* plot containiner element: */
+  let plot_container_el = site_vars['plot_container_el'];
+  /* enable the element: */
+  plot_container_el.style.display = site_vars['plot_container_el_display'];
 
 
   /* contour plot test: */
@@ -713,6 +761,8 @@ async function main() {
 window.addEventListener('load', function() {
   /* add options inputs: */
   add_options();
+  /* hide some elements ... : */
+  hide_elements();
   /* load data: */
 //  load_data();
 });

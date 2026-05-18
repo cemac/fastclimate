@@ -184,7 +184,7 @@ h4 a {
   margin-bottom: 1em;
   max-width: 66em;
   padding-right: 0.8em;
-  padding-bottom: 3em;
+  padding-bottom: 1em;
 }
 
 .content_text a,
@@ -267,6 +267,43 @@ h4 a {
   .option_note {
     min-width: 95%;
   }
+}
+
+/** model running elements: **/
+
+.content_run_button {
+  font-size: 1.1em;
+  color: #ffffff;
+  background-color: #0030a2;
+  border: 1px solid #0030a2;
+  padding: 0.5em;
+  margin: 0.5em;
+  margin-left: 1.5em;
+  margin-bottom: 1.5em;
+  cursor: pointer;
+}
+
+.content_run_button:focus,
+.content_run_button:active,
+.content_run_button:hover {
+  background-color: #3498eb;
+  border: 1px solid #3498eb;
+}
+
+.content_run_button:disabled, .run_button[disabled] {
+  color: #999999;
+  background-color: #e9e9e9;
+  border: 1px solid #e9e9e9;
+  cursor: auto;
+}
+
+.content_model_spinner {
+  display: none;
+  height: 2.1em;
+  padding: 0.3em;
+  margin: 0.5em;
+  margin-left: 2.5em;
+  margin-bottom: 1.5em;
 }
 
 /** plots: **/
