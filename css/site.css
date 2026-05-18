@@ -182,7 +182,7 @@ h4 a {
   margin-left: 2em;
   margin-right: 2em;
   margin-bottom: 1em;
-  max-width: 56em;
+  max-width: 66em;
   padding-right: 0.8em;
   padding-bottom: 3em;
 }
@@ -205,21 +205,25 @@ h4 a {
 
 .content_option tt {
   font-size: 1.2em;
+  color: #0030a2;
 }
 
 .option_header {
   margin: 0em;
   margin-top: 1em;
+  margin-bottom: 0.2em;
 }
 
 .option_label {
   background-color: #f7f9fb;
-  min-width: 35em;
-  padding: 0.5em;
-  margin: 0.5em;
+  min-width: 45em;
+  padding: 0.2em;
+  padding-top: 0.3em;
+  margin: 0.2em;
+  margin-left: 0.1em;
 }
 
-@media only screen and (max-width: 725px) {
+@media only screen and (max-width: 1100px) {
   .option_label {
     min-width: 95%;
   }
@@ -232,17 +236,37 @@ h4 a {
 
 .option_value {
   min-width: 15em;
-  padding: 0.5em;
-  margin: 0.5em;
+  padding: 0.2em;
+  margin: 0.2em;
   text-align: right;
 }
 
 .option_error {
   display: none;
   color: #ee3333;
-  padding: 0.5em;
-  margin: 0.5em;
-  max-width: 35em;
+  padding: 0.2em;
+  margin: 0.2em;
+  max-width: 45em;
+}
+
+.option_note {
+  min-width: 35em;
+  padding: 0.2em;
+  padding-top: 0.3em;
+  margin: 0.2em;
+  margin-left: 0.1em;
+  color: #484848;
+  font-size: 1em;
+}
+
+.option_note tt {
+  font-size: 1.1em;
+}
+
+@media only screen and (max-width: 725px) {
+  .option_note {
+    min-width: 95%;
+  }
 }
 
 /** plots: **/

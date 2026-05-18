@@ -38,7 +38,6 @@ var site_vars = {
     'co2': {
       'section': 'CO₂ concentration',
       'label': 'Simulated CO2 concentration (1=today)',
-      'units': null,
       'min': 0.1,
       'max': 10,
       'default': 1.0
@@ -54,11 +53,104 @@ var site_vars = {
     'albsnow': {
       'section': 'Shortwave (solar) radiation parameters',
       'label': 'albedo of snow-covered land surfaces (except Antarctica)',
-      'units': null,
       'min': 0,
       'max': 1,
       'default': 0.73
-    }
+    },
+    'albsnowant': {
+      'section': 'Shortwave (solar) radiation parameters',
+      'label': 'albedo of surface in Antarctica (higher because no trees)',
+      'min': 0,
+      'max': 1,
+      'default': 0.85
+    },
+    'albbare': {
+      'section': 'Shortwave (solar) radiation parameters',
+      'label': 'albedo of non-ice land',
+      'min': 0,
+      'max': 1,
+      'default': 0.15
+    },
+    'albonoice': {
+      'section': 'Shortwave (solar) radiation parameters',
+      'label': 'albedo of ice-free ocean',
+      'min': 0,
+      'max': 1,
+      'default': 0.08
+    },
+    'alboicewin': {
+      'section': 'Shortwave (solar) radiation parameters',
+      'label': 'thick ice winter albedo',
+      'min': 0,
+      'max': 1,
+      'default': 0.75
+    },
+    'alboicesum': {
+      'section': 'Shortwave (solar) radiation parameters',
+      'label': 'thick ice summer albedo',
+      'min': 0,
+      'max': 1,
+      'default': 0.65
+    },
+    'albatm': {
+      'section': 'Shortwave (solar) radiation parameters',
+      'label': 'atmosphere and cloud albedo',
+      'min': 0,
+      'max': 1,
+      'default': 0.26
+    },
+    'absair': {
+      'section': 'Shortwave (solar) radiation parameters',
+      'label': 'atmosphere and cloud shortwave absorption parameter',
+      'min': 0,
+      'max': 1,
+      'default': 0.18
+    },
+    'epsua1': {
+      'section': 'Longwave (IR) radiation parameters',
+      'label': 'upwelling atmospheric emissivity',
+      'min': 0.1,
+      'max': 2,
+      'default': 0.9
+    },
+    'epsba1': {
+      'section': 'Longwave (IR) radiation parameters',
+      'label': 'downwelling atmospheric emissivity',
+      'min': 0.1,
+      'max': 2,
+      'default': 1.22
+    },
+    'epsa1': {
+      'section': 'Longwave (IR) radiation parameters',
+      'label': 'total atmosphere LW absorptivity',
+      'min': 0,
+      'max': 1,
+      'default': 0.945
+    },
+    'epssfc': {
+      'section': 'Longwave (IR) radiation parameters',
+      'label': 'Surface/ABL emmissivity',
+      'min': 0.1,
+      'max': 1,
+      'default': 1
+    },
+    'Kha': {
+      'section': 'Advection coefficients',
+      'label': 'Horizontal advection parameter for atmosphere',
+      'units': 'J lat²/s/m²/K',
+      'min': 0,
+      'max': 3000,
+      'default': 1100,
+      'note': '* Decrease <tt>dtday</tt> for <tt>Kha</tt> > <tt>1500</tt>'
+    },
+    'Khicefactor': {
+      'section': 'Advection coefficients',
+      'label': '<tt>Khicefactor</tt> × <tt>Kho1</tt> = Horizontal advection parameter for sea ice',
+      'units': 'm³K/J',
+      'min': 0,
+      'max': 2e-7,
+      'default': 3.3e-8
+    },
 
 
   },
@@ -204,6 +296,7 @@ function add_options() {
     let option_min = my_options['min'];
     let option_max = my_options['max'];
     let option_default = my_options['default'];
+    let option_note = my_options['note'];
     /* create html elements for section header, if required: */
     if (option_section != options_section) {
       let section_header_el = document.createElement('h4');
@@ -233,10 +326,20 @@ function add_options() {
     option_el.appendChild(option_value_el);
     options_el.appendChild(option_el);
     options_el.appendChild(option_error_el);
-    /* store elementS: */
+    /* add note if required: */
+    let option_note_el = null;
+    if ((option_note != undefined) && (option_note != null)) {
+      option_note_el = document.createElement('label');
+      option_note_el.id = 'option_' + option + '_note';
+      option_note_el.classList = 'option_note';
+      option_note_el.innerHTML = option_note;
+      option_el.appendChild(option_note_el);
+    };
+    /* store elements: */
     site_vars['options'][option]['label_el'] = option_label_el;
     site_vars['options'][option]['value_el'] = option_value_el;
     site_vars['options'][option]['error_el'] = option_error_el;
+    site_vars['options'][option]['note_el'] = option_note_el;
     /* set label: */
     let option_label_html = option_label;
     option_label_html += ' (<tt>' + option + '</tt>)';
