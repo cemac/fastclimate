@@ -192,6 +192,50 @@ h4 a {
   color: #ffffff;
 }
 
+/** model options: **/
+
+.content_option {
+  margin: 0.3em;
+  font-size: 1.1em;
+}
+
+.content_option tt {
+  font-size: 1.2em;
+}
+
+.option_label {
+  background-color: #f7f9fb;
+  min-width: 27em;
+  padding: 0.5em;
+  margin: 0.5em;
+}
+
+@media only screen and (max-width: 500px) {
+  .option_label {
+    min-width: 95%;
+  }
+}
+
+.option_text {
+  border-width: 0.1em;
+  border-color: #989898;
+}
+
+.option_value {
+  min-width: 14em;
+  padding: 0.5em;
+  margin: 0.5em;
+  text-align: right;
+}
+
+.option_error {
+  display: none;
+  color: #ee3333;
+  padding: 0.5em;
+  margin: 0.5em;
+  max-width: 26em;
+}
+
 /** plots: **/
 
 .content_plots {

@@ -16,6 +16,25 @@ var site_vars = {
     'tinit': 'tinit.json'
   },
   'comparewith_file': '35yearstandard.json',
+
+
+  /* model option elements: */
+  'option_els': {
+    'toffset': document.getElementById('option_toffset_value'),
+    'toffset_error': document.getElementById('option_toffset_error')
+  },
+
+
+  /* model options: */
+  'model_options': {
+    'toffset': 0
+
+
+  },
+  /* variable to indicate if options are o.k.: */
+  'model_options_ok': true,
+
+
   /* data gets stored here: */
   'data': {},
   'comparewith': null,
@@ -27,6 +46,108 @@ var site_vars = {
 
 
 /** functions **/
+
+
+/* numeric check function: */
+function check_numeric(name, value, value_min, value_max, check_int) {
+  /* init output data: */
+  let check_value = {
+    'status': true,
+    'message': null,
+  };
+  /* check empty: */
+  if ((value == null) || (value == '')) {
+    check_value['status'] = false;
+    check_value['message'] = name + ' value is empty.';
+  };
+  /* check numeric: */
+  if (isNaN(value) == true) {
+    check_value['status'] = false;
+    check_value['message'] = name + ' value is not numeric.';
+  };
+  /* check greater than min: */
+  if (value < value_min) {
+    check_value['status'] = false;
+    check_value['message'] = name + ' value must not be less than ' +
+                             value_min + '.';
+  };
+  /* check less than max: */
+  if (value > value_max) {
+    check_value['status'] = false;
+    check_value['message'] = name + ' value must not be greater than ' +
+                             value_max + '.';
+  };
+  /* check is integer: */
+  if (check_int == true) {
+    if (Number.isInteger(parseFloat(value)) == false) {
+      check_value['status'] = false;
+      check_value['message'] = name + ' value should be an integer.';
+    };
+  };
+  /* return the output data: */
+  return check_value;
+}
+
+/* options validation function: */
+function validate_options() {
+  /* presume all o.k.: */
+  site_vars['model_options_ok'] = true;
+  /* option elements: */
+  let option_els = site_vars['option_els'];
+  /* default input border color: */
+  let input_border_ok = '#989898';
+  /* input border color on error: */
+  let input_border_err = '#ee3333';
+  /* run button element: */
+//  let input_run_button = option_els['run_button'];
+  /* toffset ... get value: */
+  let toffset_el = option_els['toffset'];
+  let toffset_value = toffset_el.value;
+  /* error element: */
+  let toffset_error_el = option_els['toffset_error'];
+  toffset_error_el.innerHTML = '';
+  /* check value: */
+  let check_value = check_numeric('Temperature offsets', toffset_value, -100, 100);
+  /* if o.k., store value: */
+  if (check_value['status'] == true) {
+    site_vars['model_options']['toffset'] = parseFloat(toffset_value);
+    toffset_error_el.style.display = 'none';
+    toffset_el.style.borderColor = input_border_ok;
+  } else {
+    /* not o.k.: */
+    site_vars['model_options_ok'] = false;
+    toffset_error_el.innerHTML = check_value['message'];
+    toffset_error_el.style.display = 'inline';
+    toffset_el.style.borderColor = input_border_err;
+  };
+
+
+  /* if optoins are o.k., enable button: */
+//  if (site_vars['model_options_ok'] == true) {
+//    input_run_button.removeAttribute('disabled');
+//  } else {
+//    input_run_button.setAttribute('disabled', true);
+//  };
+};
+
+/* add input listeners: */
+function add_listeners() {
+  /* get all text input elements: */
+  let option_values = document.getElementsByClassName('option_text');
+  /* loop through values: */
+  for (let i = 0; i < option_values.length; i++) {
+    let option_value = option_values[i];
+    /* add focus listener to select text: */
+    option_value.addEventListener('focus', option_value.select);
+    /* add change listener: */
+    option_value.addEventListener('input', validate_options);
+    option_value.addEventListener('propertychange', validate_options);
+  };
+//  /* add run button listener: */
+//  let option_run_button = option_els['run_button'];
+//  /* add click listener: */
+//  option_run_button.addEventListener('click', run_model);
+};
 
 
 /* data loading function: */
@@ -272,6 +393,8 @@ async function main() {
 
 /* on window load ... : */
 window.addEventListener('load', function() {
+  /* add listeners to various elements: */
+  add_listeners();
   /* load data: */
-  load_data();
+//  load_data();
 });
