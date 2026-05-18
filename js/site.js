@@ -116,9 +116,9 @@ function validate_options() {
   for (let option in options) {
     /* get values for the option: */
     let my_options = options[option];
-    let option_el = my_options['value'];
-    let option_value = option_el.value;
-    let option_error_el = my_options['error'];
+    let option_value_el = my_options['value_el'];
+    let option_value = option_value_el.value;
+    let option_error_el = my_options['error_el'];
     let option_default = my_options['default'];
     let option_label = my_options['label'];
     let option_min = my_options['min'];
@@ -129,13 +129,13 @@ function validate_options() {
     if (check_value['status'] == true) {
       site_vars['model_options'][option] = parseFloat(option_value);
       option_error_el.style.display = 'none';
-      option_el.style.borderColor = option_border_ok;
+      option_value_el.style.borderColor = option_border_ok;
     } else {
       /* not o.k.: */
       site_vars['model_options_ok'] = false;
       option_error_el.innerHTML = check_value['message'];
       option_error_el.style.display = 'inline';
-      option_el.style.borderColor = option_border_err;
+      option_value_el.style.borderColor = option_border_err;
     };
   };
   /* if options are o.k., enable button: */
