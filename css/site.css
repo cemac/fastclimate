@@ -182,7 +182,7 @@ h4 a {
   margin-left: 2em;
   margin-right: 2em;
   margin-bottom: 1em;
-  max-width: 51em;
+  max-width: 56em;
   padding-right: 0.8em;
   padding-bottom: 3em;
 }
@@ -214,12 +214,12 @@ h4 a {
 
 .option_label {
   background-color: #f7f9fb;
-  min-width: 30em;
+  min-width: 35em;
   padding: 0.5em;
   margin: 0.5em;
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 725px) {
   .option_label {
     min-width: 95%;
   }
@@ -231,7 +231,7 @@ h4 a {
 }
 
 .option_value {
-  min-width: 14em;
+  min-width: 15em;
   padding: 0.5em;
   margin: 0.5em;
   text-align: right;
@@ -242,7 +242,7 @@ h4 a {
   color: #ee3333;
   padding: 0.5em;
   margin: 0.5em;
-  max-width: 30em;
+  max-width: 35em;
 }
 
 /** plots: **/

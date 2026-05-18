@@ -42,7 +42,25 @@ var site_vars = {
       'min': 0.1,
       'max': 10,
       'default': 1.0
+    },
+    'sc': {
+      'section': 'Shortwave (solar) radiation parameters',
+      'label': 'Solar "constant"',
+      'units': 'J/s/m²',
+      'min': 1000,
+      'max': 1700,
+      'default': 1365
+    },
+    'albsnow': {
+      'section': 'Shortwave (solar) radiation parameters',
+      'label': 'albedo of snow-covered land surfaces (except Antarctica)',
+      'units': null,
+      'min': 0,
+      'max': 1,
+      'default': 0.73
     }
+
+
   },
   /* model options values stored here: */
   'model_options': {},
@@ -71,30 +89,30 @@ function check_numeric(name, value, value_min, value_max, check_int) {
   /* check empty: */
   if ((value == null) || (value == '')) {
     check_value['status'] = false;
-    check_value['message'] = name + ' value is empty.';
+    check_value['message'] = 'Value is empty.';
   };
   /* check numeric: */
   if (isNaN(value) == true) {
     check_value['status'] = false;
-    check_value['message'] = name + ' value is not numeric.';
+    check_value['message'] = 'Value is not numeric.';
   };
   /* check greater than min: */
   if (value < value_min) {
     check_value['status'] = false;
-    check_value['message'] = name + ' value must not be less than ' +
+    check_value['message'] = 'Value must not be less than ' +
                              value_min + '.';
   };
   /* check less than max: */
   if (value > value_max) {
     check_value['status'] = false;
-    check_value['message'] = name + ' value must not be greater than ' +
+    check_value['message'] = 'Value must not be greater than ' +
                              value_max + '.';
   };
   /* check is integer: */
   if (check_int == true) {
     if (Number.isInteger(parseFloat(value)) == false) {
       check_value['status'] = false;
-      check_value['message'] = name + ' value should be an integer.';
+      check_value['message'] = 'Value should be an integer.';
     };
   };
   /* return the output data: */
