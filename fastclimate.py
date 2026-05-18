@@ -22,7 +22,7 @@ DEFAULTS = {
     #  model run time (years):
     'tmax': 10,
     #  plot only last plotyears (years):
-    'plotyears': 3,
+    'plotyears': 2,
     #  jpeg compaction 10-95 useful range:
 ###     'plotquality': 75,
     #  this model run will be compared with one

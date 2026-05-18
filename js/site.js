@@ -217,8 +217,54 @@ var site_vars = {
       'default': 2e6,
       'note': '* Decrease <tt>dtday</tt> for <tt>Css</tt> < <tt>2e6</tt>'
     },
-
-
+    'Tsnowtotal': {
+      'section': 'Snow parameters',
+      'label': 'Temperature below which surface assumed totally covered with snow',
+      'units': 'K',
+      'min': 250,
+      'max': 274,
+      'default': 269
+    },
+    'Tsnowstart': {
+      'section': 'Snow parameters',
+      'label': 'Temperature above which surface assumed totally snow-free',
+      'units': 'K',
+      'min': 272,
+      'max': 290,
+      'default': 278
+    },
+    'hocean': {
+      'section': 'Ocean parameters',
+      'label': 'Ocean mixed layer depth',
+      'units': 'metres',
+      'min': 5,
+      'max': 5000,
+      'default': 50
+    },
+    'qocean1': {
+      'section': 'Ocean parameters',
+      'label': 'Ocean flux from below mixed layer (not conserved)',
+      'units': 'J/s/m²',
+      'min': -100,
+      'max': 500,
+      'default': 2
+    },
+    'tmax': {
+      'section': 'Model parameters',
+      'label': 'Length of model run',
+      'units': 'years',
+      'min': 2,
+      'max': 35,
+      'default': 10
+    },
+    'plotyears': {
+      'section': 'Plotting parameters',
+      'label': 'Number of years to plot (the last <tt>plotyears</tt> years are plotted)',
+      'units': 'years',
+      'min': 1,
+      'max': 35,
+      'default': 2
+    }
   },
   /* model options values stored here: */
   'model_options': {},
