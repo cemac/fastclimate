@@ -285,7 +285,8 @@ let site_vars = {
   'plot_els': {
     'swtop': 'swtop_plot',
     'TTsavg': 'TTsavg_plot',
-    'TTsavg_diff': 'TTsavg_diff_plot'
+    'TTsavg_diff': 'TTsavg_diff_plot',
+    'Hi': 'Hi_plot',
   },
   /* color scales: */
   'colorscales': {
@@ -306,6 +307,19 @@ let site_vars = {
       [0.93, 'rgb(156, 17, 39)'],
       [1.0, 'rgb(103, 0, 31)']
    ]
+  },
+  /* plotly plot config: */
+  'plot_conf': {
+    'showLink': false,
+    'linkText': '',
+    'displaylogo': false,
+    'modeBarButtonsToRemove': [
+      'autoScale2d',
+      'lasso2d',
+      'toggleSpikelines',
+      'select2d'
+    ],
+    'responsive': true
   },
   /* model options values stored here: */
   'model_options': {
@@ -658,18 +672,7 @@ function plot_swtop() {
     }
   };
   /* contour config: */
-  let contour_conf = {
-    'showLink': false,
-    'linkText': '',
-    'displaylogo': false,
-    'modeBarButtonsToRemove': [
-      'autoScale2d',
-      'lasso2d',
-      'toggleSpikelines',
-      'select2d'
-    ],
-    'responsive': true
-  };
+  let contour_conf = site_vars['plot_conf'];
   /* draw plot: */
   Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
 };
@@ -755,18 +758,7 @@ function plot_TTsavg() {
     }
   };
   /* contour config: */
-  let contour_conf = {
-    'showLink': false,
-    'linkText': '',
-    'displaylogo': false,
-    'modeBarButtonsToRemove': [
-      'autoScale2d',
-      'lasso2d',
-      'toggleSpikelines',
-      'select2d'
-    ],
-    'responsive': true
-  };
+  let contour_conf = site_vars['plot_conf'];
   /* draw the plot: */
   Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
 };
@@ -858,18 +850,109 @@ function plot_TTsavg_diff() {
     }
   };
   /* contour config: */
-  let contour_conf = {
-    'showLink': false,
-    'linkText': '',
-    'displaylogo': false,
-    'modeBarButtonsToRemove': [
-      'autoScale2d',
-      'lasso2d',
-      'toggleSpikelines',
-      'select2d'
-    ],
-    'responsive': true
+  let contour_conf = site_vars['plot_conf'];
+  /* draw the plot: */
+  Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
+};
+
+/* plot Hi: */
+function plot_Hi() {
+  /* get name of element for plot: */
+  let plot_el = site_vars['plot_els']['Hi'];
+  /* get values to plot: */
+  let l = site_vars['result']['l'];
+  let Hi = site_vars['result']['Hi'];
+  /* need to extract final yar values: */
+  let cnit = site_vars['result']['cnit'];
+  let xi = [];
+  let x = [];
+  let y = [];
+  let z = [];
+  let yi = [1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17];
+  for (let i = 0; i < yi.length; i++) {
+    let ii = yi[i];
+    y[i] = l[ii];
+    z[i] = [];
+    for (let j = 0; j < cnit.length; j++) {
+      if ((ii == 6) || (ii == 11)) {
+        z[i][j] = null;
+      } else {
+        z[i][j] = Hi[ii][cnit[j]].toFixed(2);
+      };
+      x[j] = Math.round(((j + 1) / cnit.length) * 365);
+      if (j == 0) {
+        xi[j] = 1;
+      } else {
+        xi[j] = x[j];
+      };
+    };
   };
+  /* xaxis tick values: */
+  let xminortickvals = [
+    1, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
+  ];
+  let xtickvals = [16, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];
+  let xticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  /* yaxis tick values: */
+  let ytickvals = [-75, -65, -55, -45, -35, 35, 45, 55, 65, 75, 85];
+  /* create hover text: */
+  let hovertext = [];
+  for (let i = 0; i < z.length; i++) {
+    hovertext[i] = [];
+    for (let j = 0; j < z[i].length; j++) {
+      if ((i == 5) || (i == 6)) {
+        hovertext[i][j] = 'Tropics not shown';
+      } else {
+        hovertext[i][j] =
+          'Day of year: ' + x[j] + '<br>' +
+          'Latitude:' + y[i] + '<br>' +
+          'Ice Thickness (m):' + z[i][j];
+      };
+    };
+  };
+  /* contour plot: */
+  let contour_plot = {
+    'name': 'contour_Hi',
+    'type': 'contour',
+    'colorscale': 'Jet',
+    'x': xi,
+    'y': y,
+    'z': z,
+    'hoverinfo': 'text',
+    'text': hovertext
+  };
+  let contour_data = [contour_plot];
+  /* contour layout: */
+  let contour_layout = {
+    'title': {
+      'text': 'Ice Thickness (m)',
+      'y': 0.9
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Month'
+      },
+      'minor': {
+        'tickmode': 'array',
+        'ticks': 'outside',
+        'tickvals': xminortickvals,
+        'ticklen': 5
+      },
+      'range': [1, 366],
+      'tickvals': xtickvals,
+      'ticklen': 0,
+      'ticktext': xticks
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Latitude'
+      },
+      'tickvals': ytickvals,
+      'zeroline': false
+    }
+  };
+  /* contour config: */
+  let contour_conf = site_vars['plot_conf'];
   /* draw the plot: */
   Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
 };
@@ -882,6 +965,8 @@ function draw_plots() {
   plot_TTsavg();
   /* TTsavg difference: */
   plot_TTsavg_diff();
+  /* Hi: */
+  plot_Hi();
 };
 
 /* fasctlimate model running function: */
