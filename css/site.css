@@ -339,8 +339,12 @@ h4 a {
   margin-left: 3em;
 }
 
-.content_plot_text label {
+.label_this {
   color: #ee3333;
+}
+
+.label_standard {
+  color: #0030a2;
 }
 
 /** footer: **/

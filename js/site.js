@@ -5,7 +5,7 @@
 
 
 /* site variables: */
-var site_vars = {
+let site_vars = {
   /* path to data files: */
   'data_path': 'data',
   /* data files to load: */
@@ -284,7 +284,28 @@ var site_vars = {
   /* plot elements: */
   'plot_els': {
     'swtop': 'swtop_plot',
-    'TTsavg': 'TTsavg_plot'
+    'TTsavg': 'TTsavg_plot',
+    'TTsavg_diff': 'TTsavg_diff_plot'
+  },
+  /* color scales: */
+  'colorscales': {
+    'RdBu': [
+      [0.0, 'rgb(5, 48, 97)'],
+      [0.07, 'rgb(25, 86, 150)'],
+      [0.14, 'rgb(47, 121, 181)'],
+      [0.21, 'rgb(79, 155, 199)'],
+      [0.29, 'rgb(135, 190, 218)'],
+      [0.36, 'rgb(182, 215, 232)'],
+      [0.43, 'rgb(219, 234, 242)'],
+      [0.5, 'rgb(247, 246, 246)'],
+      [0.57, 'rgb(251, 227, 212)'],
+      [0.64, 'rgb(249, 196, 169)'],
+      [0.71, 'rgb(240, 156, 123)'],
+      [0.79, 'rgb(219, 107, 85)'],
+      [0.86, 'rgb(193, 54, 57)'],
+      [0.93, 'rgb(156, 17, 39)'],
+      [1.0, 'rgb(103, 0, 31)']
+   ]
   },
   /* model options values stored here: */
   'model_options': {
@@ -658,17 +679,17 @@ function plot_TTsavg() {
   /* get name of element for plot: */
   let plot_el = site_vars['plot_els']['TTsavg'];
   /* get values to plot: */
-  var y = site_vars['result']['l'];
-  var TTsavg = site_vars['result']['TTsavg'];
+  let y = site_vars['result']['l'];
+  let TTsavg = site_vars['result']['TTsavg'];
   /* need to extract final yar values: */
-  var cnit = site_vars['result']['cnit'];
-  var xi = [];
-  var x = [];
-  var z = [];
+  let cnit = site_vars['result']['cnit'];
+  let xi = [];
+  let x = [];
+  let z = [];
   for (let i = 0; i < TTsavg.length; i++) {
     z[i] = [];
     for (let j = 0; j < cnit.length; j++) {
-      z[i][j] = TTsavg[i][cnit[j]];
+      z[i][j] = TTsavg[i][cnit[j]].toFixed(2);
       x[j] = Math.round(((j + 1) / cnit.length) * 365);
       if (j == 0) {
         xi[j] = 1;
@@ -678,24 +699,24 @@ function plot_TTsavg() {
     };
   };
   /* xaxis tick values: */
-  var xminortickvals = [
+  let xminortickvals = [
     1, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
   ];
-  var xtickvals = [16, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];
-  var xticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  let xtickvals = [16, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];
+  let xticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
   /* create hover text: */
-  var hovertext = [];
+  let hovertext = [];
   for (let i = 0; i < z.length; i++) {
     hovertext[i] = [];
     for (let j = 0; j < z[i].length; j++) {
       hovertext[i][j] =
         'Day of year: ' + x[j] + '<br>' +
         'Latitude:' + y[i] + '<br>' +
-        'Surface Temperature (°C):' + z[i][j].toFixed(2);
+        'Surface Temperature (°C):' + z[i][j];
     };
   };
   /* contour plot: */
-  var contour_plot = {
+  let contour_plot = {
     'name': 'contour_TTsavg',
     'type': 'contour',
     'colorscale': 'Jet',
@@ -705,9 +726,9 @@ function plot_TTsavg() {
     'hoverinfo': 'text',
     'text': hovertext
   };
-  var contour_data = [contour_plot];
+  let contour_data = [contour_plot];
   /* contour layout: */
-  var contour_layout = {
+  let contour_layout = {
     'title': {
       'text': 'Surface Temperature (°C)',
       'y': 0.9
@@ -734,7 +755,110 @@ function plot_TTsavg() {
     }
   };
   /* contour config: */
-  var contour_conf = {
+  let contour_conf = {
+    'showLink': false,
+    'linkText': '',
+    'displaylogo': false,
+    'modeBarButtonsToRemove': [
+      'autoScale2d',
+      'lasso2d',
+      'toggleSpikelines',
+      'select2d'
+    ],
+    'responsive': true
+  };
+  /* draw the plot: */
+  Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
+};
+
+/* plot TTsavg difference: */
+function plot_TTsavg_diff() {
+  /* get name of element for plot: */
+  let plot_el = site_vars['plot_els']['TTsavg_diff'];
+  /* get values to plot: */
+  let y = site_vars['result']['l'];
+  let TTsavg = site_vars['result']['TTsavg'];
+  let TTsavg1 = site_vars['comparewith']['TTsavg1'];
+  /* need to extract final yar values: */
+  let cnit = site_vars['result']['cnit'];
+  let xi = [];
+  let x = [];
+  let z = [];
+  let z_min_max = -999999;
+  for (let i = 0; i < TTsavg.length; i++) {
+    z[i] = [];
+    for (let j = 0; j < cnit.length; j++) {
+      z[i][j] = (TTsavg[i][cnit[j]] - TTsavg1[i][cnit[j]]).toFixed(2);
+      z_min_max = Math.max(z_min_max, Math.abs(Math.round(z[i][j])));
+      x[j] = Math.round(((j + 1) / cnit.length) * 365);
+      if (j == 0) {
+        xi[j] = 1;
+      } else {
+        xi[j] = x[j];
+      };
+    };
+  };
+  /* xaxis tick values: */
+  let xminortickvals = [
+    1, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
+  ];
+  let xtickvals = [16, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];
+  let xticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  /* create hover text: */
+  let hovertext = [];
+  for (let i = 0; i < z.length; i++) {
+    hovertext[i] = [];
+    for (let j = 0; j < z[i].length; j++) {
+      hovertext[i][j] =
+        'Day of year: ' + x[j] + '<br>' +
+        'Latitude:' + y[i] + '<br>' +
+        'Surface Temperature difference (°C):' + z[i][j];
+    };
+  };
+  /* contour plot: */
+  let colorscale = site_vars['colorscales']['RdBu'];
+  let contour_plot = {
+    'name': 'contour_TTsavg_diff',
+    'type': 'contour',
+    'colorscale': colorscale,
+    'x': xi,
+    'y': y,
+    'z': z,
+    'zmin': -z_min_max,
+    'zmax': z_min_max,
+    'hoverinfo': 'text',
+    'text': hovertext
+  };
+  let contour_data = [contour_plot];
+  /* contour layout: */
+  let contour_layout = {
+    'title': {
+      'text': 'Surface Temperature Difference (°C)',
+      'y': 0.9
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Month'
+      },
+      'minor': {
+        'tickmode': 'array',
+        'ticks': 'outside',
+        'tickvals': xminortickvals,
+        'ticklen': 5
+      },
+      'range': [1, 366],
+      'tickvals': xtickvals,
+      'ticklen': 0,
+      'ticktext': xticks
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Latitude'
+      }
+    }
+  };
+  /* contour config: */
+  let contour_conf = {
     'showLink': false,
     'linkText': '',
     'displaylogo': false,
@@ -756,6 +880,8 @@ function draw_plots() {
   plot_swtop();
   /* TTsavg: */
   plot_TTsavg();
+  /* TTsavg difference: */
+  plot_TTsavg_diff();
 };
 
 /* fasctlimate model running function: */
