@@ -23,14 +23,9 @@ DEFAULTS = {
     'tmax': 10,
     #  plot only last plotyears (years):
     'plotyears': 2,
-    #  jpeg compaction 10-95 useful range:
-###     'plotquality': 75,
     #  this model run will be compared with one
     #  other previous run:
     'comparewith': '35yearstandard.json',
-    #  name to use for later comparison
-    #  'nosave' = no file saved:
-###     'saveas': 'nosave',
     # offset initial conditions ...
     # initial temperature offsets (^oC)
     # (Tocean<freezing will be adjusted):
@@ -190,9 +185,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     # set variables from options:
     tmax = options['tmax']
     plotyears = options['plotyears']
-###     plotquality = options['plotquality']
     comparewith = options['comparewith']
-###     saveas = options['saveas']
     toffset = options['toffset']
     iceoffset = options['iceoffset']
     co2 = options['co2']
