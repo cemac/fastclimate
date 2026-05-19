@@ -182,7 +182,7 @@ h4 a {
   margin-left: 2em;
   margin-right: 2em;
   margin-bottom: 1em;
-  max-width: 66em;
+  max-width: 69em;
   padding-right: 0.8em;
   padding-bottom: 1em;
 }
@@ -216,14 +216,14 @@ h4 a {
 
 .option_label {
   background-color: #f7f9fb;
-  min-width: 45em;
+  min-width: 48em;
   padding: 0.2em;
   padding-top: 0.3em;
   margin: 0.2em;
   margin-left: 0.1em;
 }
 
-@media only screen and (max-width: 1100px) {
+@media only screen and (max-width: 1150px) {
   .option_label {
     min-width: 95%;
   }
