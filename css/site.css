@@ -286,8 +286,8 @@ h4 a {
 .content_run_button:focus,
 .content_run_button:active,
 .content_run_button:hover {
-  background-color: #3498eb;
-  border: 1px solid #3498eb;
+  background-color: #3465eb;
+  border: 1px solid #3465eb;
 }
 
 .content_run_button:disabled, .run_button[disabled] {
@@ -302,7 +302,7 @@ h4 a {
   height: 2.1em;
   padding: 0.3em;
   margin: 0.5em;
-  margin-left: 2.5em;
+  margin-left: 3.5em;
   margin-bottom: 1.5em;
 }
 
