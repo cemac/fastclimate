@@ -313,19 +313,34 @@ h4 a {
   min-height: 35em;
 }
 
-.content_plot {
+.content_plot_container {
   margin: 0.5em;
-  min-height: 35em;
   max-width: 49%;
   flex-basis: 33%;
 }
 
+.content_plot {
+  margin: 0.5em;
+  min-height: 35em;
+}
+
 @media only screen and (max-width: 900px) {
-  .content_plot {
-    min-height: 30em;
+  .content_plot_container {
     max-width: 99%;
     flex-basis: 51%;
   }
+  .content_plot {
+    min-height: 30em;
+  }
+}
+
+.content_plot_text {
+  margin: 0.5em;
+  margin-left: 3em;
+}
+
+.content_plot_text label {
+  color: #ee3333;
 }
 
 /** footer: **/

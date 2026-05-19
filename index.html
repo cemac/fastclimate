@@ -107,9 +107,32 @@
           </div>
           <!-- plots: ______________________________________________________ -->
           <div id="content_plots"
-               class="content_plots row_wrap flex_start">
-            <div id="swtop_plot" class="content_plot flex_grow"></div>
-            <div id="TTsavg_plot" class="content_plot flex_grow"></div>
+               class="content_plots">
+            <div class="row_wrap flex_center">
+              <div class="content_plot_container column">
+                <div id="swtop_plot"
+                     class="content_plot flex_grow"></div>
+                <div id="swtop_plot_text"
+                     class="content_plot_text flex_grow">
+                  <b>Figure 1.</b> Mean Solar Radiation at the top of the
+                  atmosphere as a function of time of year (months shown on
+                  X-axis) and latitude (Y-axis). Note color scale to the right
+                  of the plot.
+                </div>
+              </div>
+            </div>
+            <div class="row_wrap flex_start">
+              <div class="content_plot_container column">
+                <div id="TTsavg_plot"
+                     class="content_plot flex_grow">
+                </div>
+                <div id="TTsavg_plot_text"
+                     class="content_plot_text flex_grow">
+                  <b>Figure 2.</b> Mean Surface Temperature as a function of
+                  time of year and latitude. (<label>this run</label>).
+                </div>
+              </div>
+            </div>
           </div>
         <!-- content end: _________________________________________________ -->
         </div>
