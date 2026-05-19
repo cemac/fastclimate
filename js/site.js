@@ -901,7 +901,7 @@ function plot_Hi() {
     hovertext[i] = [];
     for (let j = 0; j < z[i].length; j++) {
       if ((i == 5) || (i == 6)) {
-        hovertext[i][j] = 'Tropics not shown';
+        hovertext[i][j] = null;
       } else {
         hovertext[i][j] =
           'Day of year: ' + x[j] + '<br>' +
@@ -921,7 +921,20 @@ function plot_Hi() {
     'hoverinfo': 'text',
     'text': hovertext
   };
-  let contour_data = [contour_plot];
+  let contour_text = {
+    'name': 'contour_text_Hi',
+    'type': 'scatter',
+    'mode': 'text',
+    'x': [183],
+    'y': [0],
+    'text': ['Tropics not shown'],
+    'textposition': 'middle center',
+    'textfont': {
+      'size': 18
+    },
+    'hoverinfo': 'none'
+  }
+  let contour_data = [contour_plot, contour_text];
   /* contour layout: */
   let contour_layout = {
     'title': {
@@ -949,7 +962,8 @@ function plot_Hi() {
       },
       'tickvals': ytickvals,
       'zeroline': false
-    }
+    },
+    'showlegend': false
   };
   /* contour config: */
   let contour_conf = site_vars['plot_conf'];
