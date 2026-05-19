@@ -650,7 +650,7 @@ function plot_swtop() {
     'responsive': true
   };
   /* draw plot: */
-  Plotly.newPlot(plot_el, contour_data, contour_layout, contour_conf);
+  Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
 };
 
 /* plot TTsavg: */
@@ -747,7 +747,7 @@ function plot_TTsavg() {
     'responsive': true
   };
   /* draw the plot: */
-  Plotly.newPlot(plot_el, contour_data, contour_layout, contour_conf);
+  Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
 };
 
 /* plot creating function: */
