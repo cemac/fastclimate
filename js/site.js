@@ -143,6 +143,14 @@ var site_vars = {
       'default': 1100,
       'note': '* Decrease <tt>dtday</tt> for <tt>Kha</tt> > <tt>1500</tt>'
     },
+    'Kho1': {
+      'section': 'Advection coefficients',
+      'label': 'Horizontal advection parameter for ocean',
+      'units': 'J lat²/s/m²/K',
+      'min': 0,
+      'max': 2000,
+      'default': 300
+    },
     'Khicefactor': {
       'section': 'Advection coefficients',
       'label': '<tt>Khicefactor × Kho1</tt> = Horizontal advection parameter for sea ice',
@@ -274,12 +282,18 @@ var site_vars = {
   'plot_container_el': document.getElementById('content_plots'),
   'plot_container_el_display': null,
   /* model options values stored here: */
-  'model_options': {},
+  'model_options': {
+     /* non editable options: */
+     'dtday': 1,
+     'savestep': 10
+   },
   /* variable to indicate if options are o.k.: */
   'model_options_ok': true,
   /* data gets stored here: */
   'data': {},
   'comparewith': null,
+  /* pyodide object: */
+  'pyodide': null,
   /* python code to load: */
   'python_path': 'fastclimate.py',
   /* result goes here: */
@@ -471,6 +485,8 @@ function add_options() {
     /* set value: */
     option_value_el.value = option_default;
   };
+  /* validate option values: */
+  validate_options();
   /* add listeners to various elements: */
   add_listeners();
 };
@@ -488,20 +504,16 @@ function hide_elements() {
 
 /* data loading function: */
 async function load_data() {
-
-
-  /* run button element: */
+  /* get run button element: */
   let run_button_el = site_vars['run_button_el'];
   site_vars['run_button_display'] = run_button_el.style.display;
-  /* model spinner element: */
+  /* get model spinner element: */
   let model_spinner_el = site_vars['model_spinner_el'];
   /* disable run button: */
   run_button_el.setAttribute('disabled', true);
   run_button_el.style.display = 'none';
   /* enable spinner: */
   model_spinner_el.style.display = 'inline';
-
-
   /* check if data is already loaded: */
   let data = site_vars['data'];
   if (Object.keys(data).length == 0) {
@@ -551,11 +563,13 @@ async function load_data() {
   };
   /* log a message: */
   console.log('* loading data completed');
-  /* */
-  main();
+  /* run the model */
+  run_model();
 };
 
-async function main() {
+/* fasctlimate model running function: */
+async function run_model() {
+  /* get python code: */
   let python_path = site_vars['python_path'];
   let python_code = null;
   await fetch(
@@ -563,24 +577,33 @@ async function main() {
   ).then(async function(data_req) {
     python_code = await data_req.text();
   });
-  let pyodide = await loadPyodide();
-  await pyodide.loadPackage('numpy');
-  await pyodide.runPython(python_code);
-  /* */
-  let defaults = pyodide.globals.get('DEFAULTS').toJs();
+  /* load pyodide and model dependencies, if required: */
+  let pyodide = site_vars['pyodide'];
+  if (pyodide == null) {
+    pyodide = await loadPyodide();
+    await pyodide.loadPackage('numpy');
+    await pyodide.runPython(python_code);
+    site_vars['pyodide'] = pyodide;
+  };
+  /* get model running function: */
   let run_fastclimate = pyodide.globals.get('run_fastclimate');
+  /* get model inputs: */
+  let model_options = site_vars['model_options'];
+  model_options['comparewith'] = site_vars['comparewith_file'];
+  let data = site_vars['data'];
+  let comparewith = site_vars['comparewith'];
+  /* run the model: */
   let result = run_fastclimate(
-    pyodide.toPy(defaults),
-    pyodide.toPy(site_vars['data']),
-    pyodide.toPy(site_vars['comparewith'])
+    pyodide.toPy(model_options),
+    pyodide.toPy(data),
+    pyodide.toPy(comparewith)
   );
+  /* log a message and store the result: */
   console.log('* fastclimate run completed');
   site_vars['result'] = result.toJs();
-
-
-  /* model spinner element: */
+  /* get model spinner element: */
   let model_spinner_el = site_vars['model_spinner_el'];
-  /* run button element: */
+  /* get run button element: */
   let run_button_el = site_vars['run_button_el'];
   /* enable spinner: */
   model_spinner_el.style.display = 'none';
@@ -763,6 +786,4 @@ window.addEventListener('load', function() {
   add_options();
   /* hide some elements ... : */
   hide_elements();
-  /* load data: */
-//  load_data();
 });
