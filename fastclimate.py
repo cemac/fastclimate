@@ -20,7 +20,7 @@ import numpy as np
 # define default parameters:
 DEFAULTS = {
     #  model run time (years):
-    'tmax': 10,
+    'tmax': 15,
     #  plot only last plotyears (years):
     'plotyears': 2,
     #  this model run will be compared with one
@@ -627,6 +627,11 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     cnplot = round((365 / (savestep * dtday) + 0.0000001))
     # last year only:
     cnit = np.arange(it - cnplot - 1, it)
+    # nit and ttp for time series plots ... :
+    nplot = round((plotyears * 365) / (savestep * dtday))
+    # plot last plotyears only:
+    nit = np.arange(it - nplot, it, dtype=int)
+    ttp = tt[nit] / 365
 
     # create dict for storing result:
     result = {
@@ -635,6 +640,8 @@ def run_fastclimate(options=None, data=None, comparewith=None):
         'l': l,
         'cnplot': cnplot,
         'cnit': cnit,
+        'nit': nit,
+        'ttp': ttp,
         'tt': tt,
         'TT': TT.T,
         'TTsland': TTsland.T,

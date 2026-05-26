@@ -339,6 +339,11 @@ h4 a {
   margin-left: 3em;
 }
 
+.content_plot_text tt {
+  font-size: 1.2em;
+  color: #0030a2;
+}
+
 .label_this {
   color: #ee3333;
 }
