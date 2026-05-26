@@ -289,7 +289,10 @@ let site_vars = {
     'Hi': 'Hi_plot',
     'Hi_diff': 'Hi_diff_plot',
     'TTsavgsp': 'TTsavgsp_plot',
-    'TTsavgnp': 'TTsavgnp_plot'
+    'TTsavgnp': 'TTsavgnp_plot',
+    'TTsavg65s': 'TTsavg65s_plot',
+    'TTsavg65n': 'TTsavg65n_plot',
+    'TTsavg5n': 'TTsavg5n_plot'
   },
   /* color scales: */
   'colorscales': {
@@ -1099,7 +1102,7 @@ function plot_Hi_diff() {
 };
 
 /* plot TTsavg time series: */
-function plot_TTsavg_ts(plot_el, lati, plot_title) {
+function plot_TTsavg_ts(plot_el, lati, offset, plot_title) {
   /* get values to plot: */
   let TTsavg = site_vars['result']['TTsavg'];
   let nit = site_vars['result']['nit'];
@@ -1119,8 +1122,8 @@ function plot_TTsavg_ts(plot_el, lati, plot_title) {
     /* get values for this step: */
     x[i] = ttp[i].toFixed(2);
     /* "make colder due to elevation": */
-    ya[i] = (TTsavg[lati][i] - 22).toFixed(2);
-    yb[i] = (TTsavg1[lati][i] - 22).toFixed(2);
+    ya[i] = (TTsavg[lati][i] + offset).toFixed(2);
+    yb[i] = (TTsavg1[lati][i] + offset).toFixed(2);
     yc[i] = ya[i] - yb[i];
     diff_min_max = Math.max(
       diff_min_max, Math.abs(Math.round(yc[i]))
@@ -1221,9 +1224,15 @@ function draw_plots() {
   /* Hi difference: */
   plot_Hi_diff();
   /* TTsavgsp: */
-  plot_TTsavg_ts(site_vars['plot_els']['TTsavgsp'], 0, 'South Pole');
+  plot_TTsavg_ts(site_vars['plot_els']['TTsavgsp'], 0, -22, 'South Pole');
   /* TTsavgnp: */
-  plot_TTsavg_ts(site_vars['plot_els']['TTsavgnp'], 0, 'North Pole');
+  plot_TTsavg_ts(site_vars['plot_els']['TTsavgnp'], 17, 0, 'North Pole');
+  /* TTsavg65s: */
+  plot_TTsavg_ts(site_vars['plot_els']['TTsavg65s'], 3, 0, '65°S');
+  /* TTsavg65n: */
+  plot_TTsavg_ts(site_vars['plot_els']['TTsavg65n'], 15, 0, '65°N');
+  /* TTsavg5n: */
+  plot_TTsavg_ts(site_vars['plot_els']['TTsavg5n'], 9, 0, '5°N');
 };
 
 /* fasctlimate model running function: */
