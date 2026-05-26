@@ -1211,6 +1211,119 @@ function plot_TTsavgsp() {
   Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
 };
 
+/* plot TTsavg for north pole: */
+function plot_TTsavgnp() {
+  /* get name of element for plot: */
+  let plot_el = site_vars['plot_els']['TTsavgnp'];
+  /* get values to plot: */
+  let TTsavg = site_vars['result']['TTsavg'];
+  let nit = site_vars['result']['nit'];
+  let ttp = site_vars['result']['ttp'];
+  let TTsavg1 = site_vars['comparewith']['TTsavg1'];
+  let this_color = site_vars['this_color'];
+  let standard_color = site_vars['standard_color'];
+  let diff_color = site_vars['diff_color'];
+  /* extract values for final 'plotyears', for specific latitude: */
+  let lati = 17;
+  let x = [];
+  let ya = [];
+  let yb = [];
+  let yc = [];
+  let diff_min_max = -999999;
+  /* loop through nit values: */
+  for (let i = 0; i < nit.length; i++) {
+    /* get values for this step: */
+    x[i] = ttp[i].toFixed(2);
+    /* "make colder due to elevation": */
+    ya[i] = (TTsavg[lati][i] - 22).toFixed(2);
+    yb[i] = (TTsavg1[lati][i] - 22).toFixed(2);
+    yc[i] = ya[i] - yb[i];
+    diff_min_max = Math.max(
+      diff_min_max, Math.abs(Math.round(yc[i]))
+    );
+  };
+  diff_min_max += 1;
+  /* scatter plot for standard run: */
+  let standard_scatter_plot = {
+    'name': 'standard run',
+    'type': 'scatter',
+    'x': x,
+    'y': yb,
+    'mode': 'lines',
+    'line': {
+      'color': standard_color
+    },
+    'xaxis': 'x',
+    'yaxis': 'y',
+    'hovertemplate': '%{y:.2f} °C<br>%{x} years from now'
+  };
+  /* scatter plot for this run: */
+  let this_scatter_plot = {
+    'name': 'this run',
+    'type': 'scatter',
+    'x': x,
+    'y': ya,
+    'mode': 'lines',
+    'line': {
+      'color': this_color
+    },
+    'xaxis': 'x',
+    'yaxis': 'y',
+    'hovertemplate': '%{y:.2f} °C<br>%{x} years from now'
+  };
+  /* scatter plot for difference: */
+  let diff_scatter_plot = {
+    'name': 'difference',
+    'type': 'scatter',
+    'x': x,
+    'y': yc,
+    'mode': 'lines',
+    'line': {
+      'color': diff_color
+    },
+    'xaxis': 'x',
+    'yaxis': 'y2',
+    'hovertemplate': '%{y:.2f} °C<br>%{x} years from now'
+  };
+  let scatter_data = [
+    standard_scatter_plot, this_scatter_plot, diff_scatter_plot
+  ];
+  /* scatter layout: */
+  let scatter_layout = {
+    'title': {
+      'text': 'North Pole'
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Years from now'
+      }
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Surface Temperature (°C)'
+      },
+      'domain': [0.4, 1]
+    },
+    'yaxis2': {
+      'title': {
+        'text': 'Difference (°C)'
+      },
+      'domain': [0, 0.3],
+      'range': [-1 * diff_min_max, diff_min_max]
+    },
+    'grid': {
+      'rows': 2,
+      'columns': 1,
+      'subplots': [['xy'], ['xy2']],
+      'roworder': 'top to bottom'
+    }
+  };
+  /* scatter config: */
+  let scatter_conf = site_vars['plot_conf'];
+  /* draw the plot: */
+  Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
+};
+
 /* plot creating function: */
 function draw_plots() {
   /* swtop: */
@@ -1225,6 +1338,8 @@ function draw_plots() {
   plot_Hi_diff();
   /* TTsavgsp: */
   plot_TTsavgsp();
+  /* TTsavgnp: */
+  plot_TTsavgnp();
 };
 
 /* fasctlimate model running function: */
