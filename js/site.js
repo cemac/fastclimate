@@ -292,7 +292,9 @@ let site_vars = {
     'TTsavgnp': 'TTsavgnp_plot',
     'TTsavg65s': 'TTsavg65s_plot',
     'TTsavg65n': 'TTsavg65n_plot',
-    'TTsavg5n': 'TTsavg5n_plot'
+    'TTsavg5n': 'TTsavg5n_plot',
+    'His': 'His_plot',
+    'Hin': 'Hin_plot'
   },
   /* color scales: */
   'colorscales': {
@@ -317,6 +319,9 @@ let site_vars = {
   'this_color': '#ee3333',
   'standard_color': '#0030a2',
   'diff_color': '#08a045',
+  'Hi_colors': [
+    '#0030a2', '#1dadc0', '#08a045', '#c733d8'
+  ],
   /* plotly plot config: */
   'plot_conf': {
     'showLink': false,
@@ -798,6 +803,9 @@ function plot_TTsavg_diff() {
       };
     };
   };
+  if (z_min_max == 0) {
+    z_min_max += 1;
+  };
   /* xaxis tick values: */
   let xminortickvals = [
     1, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
@@ -1014,6 +1022,9 @@ function plot_Hi_diff() {
       };
     };
   };
+  if (z_min_max == 0) {
+    z_min_max += 1;
+  };
   /* xaxis tick values: */
   let xminortickvals = [
     1, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
@@ -1037,6 +1048,8 @@ function plot_Hi_diff() {
       };
     };
   };
+
+
   /* contour plot: */
   let colorscale = site_vars['colorscales']['RdBu'];
   let contour_plot = {
@@ -1120,10 +1133,11 @@ function plot_TTsavg_ts(plot_el, lati, offset, plot_title) {
   /* loop through nit values: */
   for (let i = 0; i < nit.length; i++) {
     /* get values for this step: */
+    let niti = nit[i];
     x[i] = ttp[i].toFixed(2);
     /* "make colder due to elevation": */
-    ya[i] = (TTsavg[lati][i] + offset).toFixed(2);
-    yb[i] = (TTsavg1[lati][i] + offset).toFixed(2);
+    ya[i] = (TTsavg[lati][niti] + offset).toFixed(2);
+    yb[i] = (TTsavg1[lati][niti] + offset).toFixed(2);
     yc[i] = ya[i] - yb[i];
     diff_min_max = Math.max(
       diff_min_max, Math.abs(Math.round(yc[i]))
@@ -1211,6 +1225,128 @@ function plot_TTsavg_ts(plot_el, lati, offset, plot_title) {
   Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
 };
 
+/* plot Hi time series: */
+function plot_Hi_ts(plot_el, lats, labels, plot_title) {
+  /* get values to plot: */
+  let Hi = site_vars['result']['Hi'];
+  let nit = site_vars['result']['nit'];
+  let ttp = site_vars['result']['ttp'];
+  let Hi1 = site_vars['comparewith']['Hi1'];
+  let Hi_colors = site_vars['Hi_colors'];
+  /* extract values for final 'plotyears', for specific latitude: */
+  let x = [];
+  let y = {};
+  let y_std = {};
+  let y_diff = {};
+  let diff_min_max = -999999;
+  /* get values each latitude: */
+  for (let i = 0; i < lats.length; i++) {
+    let lat = lats[i];
+    y[lat] = [];
+    y_std[lat] = [];
+    y_diff[lat] = [];
+    /* loop through nit values: */
+    for (let j = 0; j < nit.length; j++) {
+      /* get values for this step: */
+      let nitj = nit[j];
+      x[j] = ttp[j].toFixed(2);
+      y[lat][j] = (Hi[lat][nitj]).toFixed(2);
+      y_std[lat][j] = (Hi1[lat][nitj]).toFixed(2);
+      y_diff[lat][j] = y[lat][j] - y_std[lat][j];
+      diff_min_max = Math.max(
+        diff_min_max, Math.abs(Math.round(y_diff[lat][j]))
+      );
+    };
+  };
+  diff_min_max += 1;
+  /* init scatter data: */
+  let scatter_data = [];
+  /* for each latitude: */
+  for (let i = 0; i < lats.length; i++) {
+    let lat = lats[i];
+    /* scatter plot for standard run: */
+    let standard_scatter_plot = {
+      'name': 'standard run ' + labels[i],
+      'type': 'scatter',
+      'x': x,
+      'y': y_std[lat],
+      'mode': 'lines',
+      'line': {
+        'color': Hi_colors[i],
+        'dash': 'dash'
+      },
+      'xaxis': 'x',
+      'yaxis': 'y',
+      'hovertemplate': '%{y:.2f}m<br>%{x} years from now'
+    };
+    /* scatter plot for this run: */
+    let this_scatter_plot = {
+      'name': 'this run ' + labels[i],
+      'type': 'scatter',
+      'x': x,
+      'y': y[lat],
+      'mode': 'lines',
+      'line': {
+        'color': Hi_colors[i]
+      },
+      'xaxis': 'x',
+      'yaxis': 'y',
+      'hovertemplate': '%{y:.2f}m<br>%{x} years from now'
+    };
+    /* scatter plot for difference: */
+    let diff_scatter_plot = {
+      'name': 'difference ' + labels[i],
+      'type': 'scatter',
+      'x': x,
+      'y': y_diff[lat],
+      'mode': 'lines',
+      'line': {
+        'color': Hi_colors[i]
+      },
+      'xaxis': 'x',
+      'yaxis': 'y2',
+      'hovertemplate': '%{y:.2f} °C<br>%{x} years from now'
+    };
+    scatter_data.push(standard_scatter_plot);
+    scatter_data.push(this_scatter_plot);
+    scatter_data.push(diff_scatter_plot);
+  };
+  /* scatter layout: */
+  let scatter_layout = {
+    'title': {
+      'text': plot_title
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Years from now'
+      }
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Ice Thickness (m)'
+      },
+      'domain': [0.4, 1]
+    },
+    'yaxis2': {
+      'title': {
+        'text': 'Difference (m)'
+      },
+      'domain': [0, 0.3],
+      'range': [-1 * diff_min_max, diff_min_max]
+    },
+    'grid': {
+      'rows': 2,
+      'columns': 1,
+      'subplots': [['xy'], ['xy2']],
+      'roworder': 'top to bottom'
+    }
+  };
+  /* scatter config: */
+  let scatter_conf = site_vars['plot_conf'];
+  /* draw the plot: */
+  Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
+};
+
 /* plot creating function: */
 function draw_plots() {
   /* swtop: */
@@ -1233,6 +1369,20 @@ function draw_plots() {
   plot_TTsavg_ts(site_vars['plot_els']['TTsavg65n'], 15, 0, '65°N');
   /* TTsavg5n: */
   plot_TTsavg_ts(site_vars['plot_els']['TTsavg5n'], 9, 0, '5°N');
+  /* His: */
+  plot_Hi_ts(
+    site_vars['plot_els']['His'],
+    [1, 2, 3, 8],
+    ['75°S', '65°S', '55°S', '45°S'],
+    'Southern Hemisphere'
+  );
+  /* Hin: */
+  plot_Hi_ts(
+    site_vars['plot_els']['Hin'],
+    [17, 16, 15, 14],
+    ['85°N', '75°N', '65°N', '55°N'],
+    'Northern Hemisphere'
+  );
 };
 
 /* fasctlimate model running function: */
