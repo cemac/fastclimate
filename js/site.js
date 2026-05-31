@@ -294,7 +294,9 @@ let site_vars = {
     'TTsavg65n': 'TTsavg65n_plot',
     'TTsavg5n': 'TTsavg5n_plot',
     'His': 'His_plot',
-    'Hin': 'Hin_plot'
+    'Hin': 'Hin_plot',
+    'TTsavgmean': 'TTsavgmean_plot',
+    'TTsavglat': 'TTsavglat_plot'
   },
   /* color scales: */
   'colorscales': {
@@ -1048,8 +1050,6 @@ function plot_Hi_diff() {
       };
     };
   };
-
-
   /* contour plot: */
   let colorscale = site_vars['colorscales']['RdBu'];
   let contour_plot = {
@@ -1347,6 +1347,152 @@ function plot_Hi_ts(plot_el, lats, labels, plot_title) {
   Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
 };
 
+/* plot TTsavg means: */
+function plot_TTsavgmean(plot_el) {
+  /* get values to plot: */
+  let TTsavg = site_vars['result']['TTsavg'];
+  let TTsavg1 = site_vars['comparewith']['TTsavg1'];
+  let cnit = site_vars['result']['cnit'];
+  let l = site_vars['result']['l'];
+  let this_color = site_vars['this_color'];
+  let standard_color = site_vars['standard_color'];
+  let diff_color = site_vars['diff_color'];
+  /* xaxis tick values: */
+  let xtickvals = [
+    -85, -75, -65, -55, -45, -35, -25, -15, -5,
+      5,  15,  25,  35,  45,  55,  65,  75,  85
+  ];
+  let xvals = [
+    '85°S', '75°S', '65°S', '55°S', '45°S', '35°S', '25°S', '15°S',  '5°S',
+     '5°N', '15°N', '25°N', '35°N', '45°N', '55°N', '65°N', '75°N', '85°N'
+  ];
+  let xticks = [
+    '85°S', '', '65°S', '', '45°S', '', '25°S', '',  '5°S',
+     '5°N', '', '25°N', '', '45°N', '', '65°N', '', '85°N'
+  ];
+  /* extract mean for final year, for each latitude: */
+  let x = [];
+  let y_std = [];
+  let y_this = [];
+  let y_diff = [];
+  let diff_min_max = -999999;
+  let hover_std = [];
+  let hover_this = [];
+  let hover_diff = [];
+  for (let i = 0; i < TTsavg.length; i++) {
+    x[i] = l[i];
+    let my_std = 0;
+    let my_this = 0;
+    for (let j = 0; j < cnit.length; j++) {
+      my_std += TTsavg1[i][cnit[j]];
+      my_this += TTsavg[i][cnit[j]];
+    };
+    if (i == 0) {
+      y_std[i] = (my_std / cnit.length).toFixed(2) - 22;
+      y_this[i] = (my_this / cnit.length).toFixed(2) - 22;
+    } else {
+      y_std[i] = (my_std / cnit.length).toFixed(2);
+      y_this[i] = (my_this / cnit.length).toFixed(2);
+    };
+    y_diff[i] = y_this[i] - y_std[i];
+    diff_min_max = Math.max(
+      diff_min_max, Math.abs(Math.round(y_diff[i]))
+    );
+    hover_std[i] = y_std[i] + '°C (' + xvals[i] + ')';
+    hover_this[i] = y_this[i] + '°C (' + xvals[i] + ')';
+    hover_diff[i] = y_diff[i] + '°C (' + xvals[i] + ')';
+  };
+  diff_min_max += 1;
+  /* scatter plot for standard run: */
+  let standard_scatter_plot = {
+    'name': 'standard run',
+    'type': 'scatter',
+    'x': x,
+    'y': y_std,
+    'mode': 'lines',
+    'line': {
+      'color': standard_color
+    },
+    'xaxis': 'x',
+    'yaxis': 'y',
+    'hoverinfo': 'text',
+    'text': hover_std
+  };
+  /* scatter plot for this run: */
+  let this_scatter_plot = {
+    'name': 'this run',
+    'type': 'scatter',
+    'x': x,
+    'y': y_this,
+    'mode': 'lines',
+    'line': {
+      'color': this_color
+    },
+    'xaxis': 'x',
+    'yaxis': 'y',
+    'hoverinfo': 'text',
+    'text': hover_this
+  };
+  /* scatter plot for difference: */
+  let diff_scatter_plot = {
+    'name': 'difference',
+    'type': 'scatter',
+    'x': x,
+    'y': y_diff,
+    'mode': 'lines',
+    'line': {
+      'color': diff_color
+    },
+    'xaxis': 'x',
+    'yaxis': 'y2',
+    'hoverinfo': 'text',
+    'text': hover_diff
+  };
+  let scatter_data = [
+    standard_scatter_plot, this_scatter_plot, diff_scatter_plot
+  ];
+  /* scatter layout: */
+  let scatter_layout = {
+    'title': {
+      'text': 'Entire Year Mean'
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Latitude'
+      },
+      'zeroline': false,
+      'tickvals': xtickvals,
+      'ticktext': xticks,
+      'ticklabelstandoff': 15
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Surface Temperature (°C)'
+      },
+      'zeroline': false,
+      'domain': [0.4, 1]
+    },
+    'yaxis2': {
+      'title': {
+        'text': 'Difference (°C)'
+      },
+      'zeroline': false,
+      'domain': [0, 0.3],
+      'range': [-1 * diff_min_max, diff_min_max]
+    },
+    'grid': {
+      'rows': 2,
+      'columns': 1,
+      'subplots': [['xy'], ['xy2']],
+      'roworder': 'top to bottom'
+    }
+  };
+  /* scatter config: */
+  let scatter_conf = site_vars['plot_conf'];
+  /* draw the plot: */
+  Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
+};
+
 /* plot creating function: */
 function draw_plots() {
   /* swtop: */
@@ -1383,6 +1529,8 @@ function draw_plots() {
     ['85°N', '75°N', '65°N', '55°N'],
     'Northern Hemisphere'
   );
+  /* TTsavgmean: */
+  plot_TTsavgmean(site_vars['plot_els']['TTsavgmean']);
 };
 
 /* fasctlimate model running function: */
