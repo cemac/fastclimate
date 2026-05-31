@@ -1394,7 +1394,7 @@ function plot_TTsavgmean(plot_el) {
       y_std[i] = (my_std / cnit.length).toFixed(2);
       y_this[i] = (my_this / cnit.length).toFixed(2);
     };
-    y_diff[i] = y_this[i] - y_std[i];
+    y_diff[i] = (y_this[i] - y_std[i]).toFixed(2);
     diff_min_max = Math.max(
       diff_min_max, Math.abs(Math.round(y_diff[i]))
     );
