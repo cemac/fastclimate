@@ -1203,6 +1203,7 @@ function plot_TTsavg_ts(plot_el, lati, offset, plot_title) {
       'title': {
         'text': 'Surface Temperature (°C)'
       },
+      'zeroline': false,
       'domain': [0.4, 1]
     },
     'yaxis2': {
@@ -1325,6 +1326,7 @@ function plot_Hi_ts(plot_el, lats, labels, plot_title) {
       'title': {
         'text': 'Ice Thickness (m)'
       },
+      'zeroline': false,
       'domain': [0.4, 1]
     },
     'yaxis2': {
@@ -1476,7 +1478,6 @@ function plot_TTsavgmean(plot_el) {
       'title': {
         'text': 'Difference (°C)'
       },
-      'zeroline': false,
       'domain': [0, 0.3],
       'range': [-1 * diff_min_max, diff_min_max]
     },
@@ -1484,6 +1485,179 @@ function plot_TTsavgmean(plot_el) {
       'rows': 2,
       'columns': 1,
       'subplots': [['xy'], ['xy2']],
+      'roworder': 'top to bottom'
+    }
+  };
+  /* scatter config: */
+  let scatter_conf = site_vars['plot_conf'];
+  /* draw the plot: */
+  Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
+};
+
+/* plot TTsavg :t specific latitudes */
+function plot_TTsavglat(plot_el) {
+  /* get values to plot: */
+  let TTsavg = site_vars['result']['TTsavg'];
+  let TTsavg1 = site_vars['comparewith']['TTsavg1'];
+  let nit = site_vars['result']['nit'];
+  let ttp = site_vars['result']['ttp'];
+  let l = site_vars['result']['l'];
+  let this_color = site_vars['this_color'];
+  let standard_color = site_vars['standard_color'];
+  let latis = [17, 15, 9, 8, 3, 0];
+  let lat_names = ['85°N', '65°N', '5°N', '5°S', '65°S', '85°S'];
+  /* extract values for final 'plotyears', for specific latitude: */
+  let x = [];
+  let y = {};
+  let y_std = {};
+  /* get values each latitude: */
+  for (let i = 0; i < latis.length; i++) {
+    let lat = latis[i];
+    y[lat] = [];
+    y_std[lat] = [];
+    /* loop through nit values: */
+    for (let j = 0; j < nit.length; j++) {
+      /* get values for this step: */
+      let nitj = nit[j];
+      x[j] = ttp[j].toFixed(2);
+      y[lat][j] = (TTsavg[lat][nitj]).toFixed(2);
+      y_std[lat][j] = (TTsavg1[lat][nitj]).toFixed(2);
+    };
+  };
+  /* init scatter data: */
+  let scatter_data = [];
+  /* for each latitude: */
+  for (let i = 0; i < latis.length; i++) {
+    let lat = latis[i];
+    let lat_name = lat_names[i];
+    let y_axis = 'y';
+    let std_name = 'standard run';
+    let this_name = 'this run';
+    let show_legend = true;
+    if (i > 0) {
+      y_axis = 'y' + (i +1);
+      show_legend = false;
+    };
+    /* scatter plot for standard run: */
+    let standard_scatter_plot = {
+      'name': std_name,
+      'type': 'scatter',
+      'x': x,
+      'y': y_std[lat],
+      'mode': 'lines',
+      'line': {
+        'color': standard_color
+      },
+      'xaxis': 'x',
+      'yaxis': y_axis,
+      'legendgroup': 'standard run',
+      'legendgrouptitle': {
+        'text': null
+      },
+      'showlegend': show_legend,
+      'hovertemplate': '%{y:.2f}°C<br>%{x} years from now<br>' + lat_name
+    };
+    /* scatter plot for this run: */
+    let this_scatter_plot = {
+      'name': this_name,
+      'type': 'scatter',
+      'x': x,
+      'y': y[lat],
+      'mode': 'lines',
+      'line': {
+        'color': this_color
+      },
+      'xaxis': 'x',
+      'yaxis': y_axis,
+      'legendgroup': 'this run',
+      'legendgrouptitle': {
+        'text': null
+      },
+      'showlegend': show_legend,
+      'hovertemplate': '%{y:.2f}°C<br>%{x} years from now<br>' + lat_name
+    };
+    /* text label for this run: */
+    let scatter_label = {
+      'name': 'scatter_label',
+      'type': 'scatter',
+      'mode': 'text',
+      'x': [parseFloat(x.slice(-1)[0]) + 0.01],
+      'y': y[lat].slice(-1),
+      'text': lat_names[i],
+      'textposition': 'middle right',
+      'textfont': {
+        'size': 14
+      },
+      'xaxis': 'x',
+      'yaxis': y_axis,
+      'showlegend': false,
+      'hoverinfo': 'none'
+    };
+    scatter_data.push(standard_scatter_plot);
+    scatter_data.push(this_scatter_plot);
+    scatter_data.push(scatter_label);
+  };
+  /* scatter layout: */
+  let scatter_layout = {
+    'title': {
+      'text': 'Zonal Temperature'
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Years from now'
+      }
+    },
+    'yaxis': {
+      'range': [-53, 13],
+      'tickvals': [-50, 10],
+      'showline': true,
+      'zeroline': false,
+      'domain': [0.85, 0.99]
+    },
+    'yaxis2': {
+      'range': [-53, 13],
+      'tickvals': [-50, 10],
+      'showline': true,
+      'zeroline': false,
+      'domain': [0.68, 0.82]
+    },
+    'yaxis3': {
+      'range': [12, 28],
+      'tickvals': [15, 25],
+      'showline': true,
+      'zeroline': false,
+      'domain': [0.51, 0.65]
+    },
+    'yaxis4': {
+      'title': {
+        'text': 'Temperature (°C)'
+      },
+      'range': [12, 28],
+      'tickvals': [15, 25],
+      'showline': true,
+      'zeroline': false,
+      'domain': [0.34, 0.48]
+    },
+    'yaxis5': {
+      'range': [-53, 13],
+      'tickvals': [-50, 10],
+      'showline': true,
+      'zeroline': false,
+      'domain': [0.17, 0.31]
+    },
+    'yaxis6': {
+      'range': [-53, 13],
+      'tickvals': [-50, 10],
+      'showline': true,
+      'zeroline': false,
+      'domain': [0, 0.14]
+    },
+    'grid': {
+      'rows': 6,
+      'columns': 1,
+      'subplots': [
+        ['xy'], ['xy2'], ['xy3'], ['xy4'], ['xy5'], ['xy6']
+      ],
       'roworder': 'top to bottom'
     }
   };
@@ -1531,6 +1705,8 @@ function draw_plots() {
   );
   /* TTsavgmean: */
   plot_TTsavgmean(site_vars['plot_els']['TTsavgmean']);
+  /* TTsavglat: */
+  plot_TTsavglat(site_vars['plot_els']['TTsavglat']);
 };
 
 /* fasctlimate model running function: */
