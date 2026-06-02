@@ -359,7 +359,9 @@ let site_vars = {
   /* python code to load: */
   'python_path': 'fastclimate.py',
   /* result goes here: */
-  'result': null
+  'result': null,
+  /* save button element: */
+  'save_button_el': document.getElementById('content_save_button')
 };
 
 
@@ -471,6 +473,9 @@ function add_listeners() {
   let run_button_el = site_vars['run_button_el'];
   /* add click listener: */
   run_button_el.addEventListener('click', load_data);
+  /* add save button listener: */
+  let save_button_el = site_vars['save_button_el'];
+  save_button_el.addEventListener('click', save_options);
 };
 
 /* set initial option values: */
@@ -1671,6 +1676,31 @@ function plot_TTsavglat(plot_el) {
   let scatter_conf = site_vars['plot_conf'];
   /* draw the plot: */
   Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
+
+
+
+/*
+  Plotly.toImage(plot_el, {
+    'format': 'png',
+    'width': 1200,
+    'height': 750
+  }).then(function(image_data) {
+    let image_name = 'plot.png';
+    let image_link = document.createElement('a');
+    image_link.setAttribute('href', image_data);
+    image_link.setAttribute('download', image_name);
+    image_link.style.visibility = 'hidden';
+    document.body.appendChild(image_link);
+    image_link.click();
+    document.body.removeChild(image_link);
+  });
+
+  https://stackoverflow.com/a/39515846
+
+*/
+
+
+
 };
 
 /* plot TTsavgb: */
@@ -2144,6 +2174,29 @@ async function run_model() {
   /* add paramater text info: */
   display_params();
 }
+
+/* options saving funcion: */
+function save_options() {
+  /* get model options: */
+  let model_options = site_vars['model_options'];
+  /* jsonify: */
+  let model_options_json = JSON.stringify(model_options);
+  /* file name for output: */
+  let json_name = 'fastclimate_options.json';
+  /* create json data: */
+  let json_data = 'data:text/json;charset=utf-8,';
+  json_data += model_options_json;
+  /* encode json data: */
+  let encoded_uri = encodeURI(json_data);
+  /* create a temporary link element: */
+  let json_link = document.createElement('a');
+  json_link.setAttribute('href', json_data);
+  json_link.setAttribute('download', json_name);
+  json_link.style.visibility = 'hidden';
+  document.body.appendChild(json_link);
+  json_link.click();
+  document.body.removeChild(json_link);
+};
 
 
 /** listeners: **/
