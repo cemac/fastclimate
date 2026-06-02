@@ -298,7 +298,9 @@ let site_vars = {
     'TTsavgmean': 'TTsavgmean_plot',
     'TTsavglat': 'TTsavglat_plot',
     'TTsavgb': 'TTsavgb_plot',
-    'TTsavgb_diff': 'TTsavgb_diff_plot'
+    'TTsavgb_diff': 'TTsavgb_diff_plot',
+    'Hib': 'Hib_plot',
+    'Hib_diff': 'Hib_diff_plot'
   },
   /* color scales: */
   'colorscales': {
@@ -701,7 +703,7 @@ function plot_TTsavg() {
   /* get values to plot: */
   let y = site_vars['result']['l'];
   let TTsavg = site_vars['result']['TTsavg'];
-  /* need to extract final yar values: */
+  /* need to extract final year values: */
   let cnit = site_vars['result']['cnit'];
   let xi = [];
   let x = [];
@@ -788,7 +790,7 @@ function plot_TTsavg_diff() {
   let y = site_vars['result']['l'];
   let TTsavg = site_vars['result']['TTsavg'];
   let TTsavg1 = site_vars['comparewith']['TTsavg1'];
-  /* need to extract final yar values: */
+  /* need to extract final year values: */
   let cnit = site_vars['result']['cnit'];
   let xi = [];
   let x = [];
@@ -882,7 +884,7 @@ function plot_Hi() {
   /* get values to plot: */
   let l = site_vars['result']['l'];
   let Hi = site_vars['result']['Hi'];
-  /* need to extract final yar values: */
+  /* need to extract final year values: */
   let cnit = site_vars['result']['cnit'];
   let xi = [];
   let x = [];
@@ -999,7 +1001,7 @@ function plot_Hi_diff() {
   let l = site_vars['result']['l'];
   let Hi = site_vars['result']['Hi'];
   let Hi1 = site_vars['comparewith']['Hi1'];
-  /* need to extract final yar values: */
+  /* need to extract final year values: */
   let cnit = site_vars['result']['cnit'];
   let xi = [];
   let x = [];
@@ -1678,7 +1680,7 @@ function plot_TTsavgb() {
   let TTsavg = site_vars['result']['TTsavg'];
   let nit = site_vars['result']['nit'];
   let ttp = site_vars['result']['ttp'];
-  /* need to extract finalplotyears values: */
+  /* need to extract final plotyears values: */
   let x = [];
   let z = [];
   for (let i = 0; i < TTsavg.length; i++) {
@@ -1746,7 +1748,7 @@ function plot_TTsavgb_diff() {
   let nit = site_vars['result']['nit'];
   let ttp = site_vars['result']['ttp'];
   let colorscale = site_vars['colorscales']['RdBu'];
-  /* need to extract finalplotyears values: */
+  /* need to extract final plotyears values: */
   let x = [];
   let z = [];
   let z_min_max = -999999;
@@ -1812,6 +1814,205 @@ function plot_TTsavgb_diff() {
   Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
 };
 
+/* plot Hib: */
+function plot_Hib() {
+  /* get name of element for plot: */
+  let plot_el = site_vars['plot_els']['Hib'];
+  /* get values to plot: */
+  let l = site_vars['result']['l'];
+  let Hi = site_vars['result']['Hi'];
+  let nit = site_vars['result']['nit'];
+  let ttp = site_vars['result']['ttp'];
+  /* need to extract final plotyears values: */
+  let x = [];
+  let z = [];
+  let y = [];
+  let yi = [1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17];
+  for (let i = 0; i < yi.length; i++) {
+    let ii = yi[i];
+    y[i] = l[ii];
+    z[i] = [];
+    for (let j = 0; j < nit.length; j++) {
+      let nitj = nit[j];
+      x[j] = ttp[j].toFixed(2);
+      if ((ii == 6) || (ii == 11)) {
+        z[i][j] = null;
+      } else {
+        z[i][j] = Hi[ii][nitj].toFixed(2);
+      };
+    };
+  };
+  /* yaxis tick values: */
+  let ytickvals = [-75, -65, -55, -45, -35, 35, 45, 55, 65, 75, 85];
+  /* create hover text: */
+  let hovertext = [];
+  for (let i = 0; i < z.length; i++) {
+    hovertext[i] = [];
+    for (let j = 0; j < z[i].length; j++) {
+      if ((i == 5) || (i == 6)) {
+        hovertext[i][j] = null;
+      } else {
+        hovertext[i][j] =
+          'Years from now: ' + x[j] + '<br>' +
+          'Latitude:' + y[i] + '<br>' +
+          'Ice Thickness (m):' + z[i][j];
+      };
+    };
+  };
+  /* contour plot: */
+  let contour_plot = {
+    'name': 'contour_Hib',
+    'type': 'contour',
+    'colorscale': 'Jet',
+    'x': x,
+    'y': y,
+    'z': z,
+    'hoverinfo': 'text',
+    'text': hovertext
+  };
+  let contour_text = {
+    'name': 'contour_text_Hi',
+    'type': 'scatter',
+    'mode': 'text',
+    'x': [x[Math.round(x.length / 2)]],
+    'y': [0],
+    'text': ['Tropics not shown'],
+    'textposition': 'middle center',
+    'textfont': {
+      'size': 18
+    },
+    'hoverinfo': 'none'
+  }
+  let contour_data = [contour_plot, contour_text];
+  /* contour layout: */
+  let contour_layout = {
+    'title': {
+      'text': 'Ice Thickness (m)',
+      'y': 0.9
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Year from now'
+      }
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Latitude'
+      },
+      'tickvals': ytickvals,
+      'zeroline': false
+    }
+  };
+  /* contour config: */
+  let contour_conf = site_vars['plot_conf'];
+  /* draw the plot: */
+  Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
+};
+
+/* plot Hib difference: */
+function plot_Hib_diff() {
+  /* get name of element for plot: */
+  let plot_el = site_vars['plot_els']['Hib_diff'];
+  /* get values to plot: */
+  let l = site_vars['result']['l'];
+  let Hi = site_vars['result']['Hi'];
+  let Hi1 = site_vars['comparewith']['Hi1'];
+  let nit = site_vars['result']['nit'];
+  let ttp = site_vars['result']['ttp'];
+  let colorscale = site_vars['colorscales']['RdBu'];
+  /* need to extract final plotyears values: */
+  let x = [];
+  let y = [];
+  let yi = [1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17];
+  let z = [];
+  let z_min_max = -999999;
+  for (let i = 0; i < yi.length; i++) {
+    let ii = yi[i];
+    y[i] = l[ii];
+    z[i] = [];
+    for (let j = 0; j < nit.length; j++) {
+      let nitj = nit[j];
+      x[j] = ttp[j].toFixed(2);
+      if ((ii == 6) || (ii == 11)) {
+        z[i][j] = null;
+      } else {
+        z[i][j] = (Hi[ii][nitj] - Hi1[ii][nitj]).toFixed(2);
+        z_min_max = Math.max(z_min_max, Math.abs(Math.round(z[i][j])));
+      };
+    };
+  };
+  /* yaxis tick values: */
+  let ytickvals = [-75, -65, -55, -45, -35, 35, 45, 55, 65, 75, 85];
+  if (z_min_max == 0) {
+    z_min_max += 1;
+  };
+  /* create hover text: */
+  let hovertext = [];
+  for (let i = 0; i < z.length; i++) {
+    hovertext[i] = [];
+    for (let j = 0; j < z[i].length; j++) {
+      if ((i == 5) || (i == 6)) {
+        hovertext[i][j] = null;
+      } else {
+        hovertext[i][j] =
+          'Years from now: ' + x[j] + '<br>' +
+          'Latitude:' + y[i] + '<br>' +
+          'Ice Thickness Difference (m):' + z[i][j];
+      };
+    };
+  };
+  /* contour plot: */
+  let contour_plot = {
+    'name': 'contour_Hib',
+    'type': 'contour',
+    'colorscale': colorscale,
+    'x': x,
+    'y': y,
+    'z': z,
+    'zmin': -z_min_max,
+    'zmax': z_min_max,
+    'hoverinfo': 'text',
+    'text': hovertext
+  };
+  let contour_text = {
+    'name': 'contour_text_Hi',
+    'type': 'scatter',
+    'mode': 'text',
+    'x': [x[Math.round(x.length / 2)]],
+    'y': [0],
+    'text': ['Tropics not shown'],
+    'textposition': 'middle center',
+    'textfont': {
+      'size': 18
+    },
+    'hoverinfo': 'none'
+  }
+  let contour_data = [contour_plot, contour_text];
+  /* contour layout: */
+  let contour_layout = {
+    'title': {
+      'text': 'Ice Thickness Difference (m)',
+      'y': 0.9
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Year from now'
+      }
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Latitude'
+      },
+      'tickvals': ytickvals,
+      'zeroline': false
+    }
+  };
+  /* contour config: */
+  let contour_conf = site_vars['plot_conf'];
+  /* draw the plot: */
+  Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
+};
+
 /* plot creating function: */
 function draw_plots() {
   /* swtop: */
@@ -1856,6 +2057,10 @@ function draw_plots() {
   plot_TTsavgb();
   /* TTsavgb difference: */
   plot_TTsavgb_diff();
+  /* Hib: */
+  plot_Hib();
+  /* Hib difference: */
+  plot_Hib_diff();
 };
 
 /* fasctlimate model running function: */
