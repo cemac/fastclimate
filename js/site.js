@@ -302,6 +302,8 @@ let site_vars = {
     'Hib': 'Hib_plot',
     'Hib_diff': 'Hib_diff_plot'
   },
+  /* model parameters text element: */
+  'model_params_el': document.getElementById('model_params_params'),
   /* color scales: */
   'colorscales': {
     'RdBu': [
@@ -2063,6 +2065,33 @@ function draw_plots() {
   plot_Hib_diff();
 };
 
+/* function to display text parameters: */
+function display_params() {
+  /* element for text info: */
+  let model_params_el = site_vars['model_params_el'];
+  /* model options: */
+  let model_options = site_vars['model_options'];
+  /* skip these options: */
+  let skip_options = ['dtday', 'savestep', 'comparewith'];
+  /* init html: */
+  let params_html = '';
+  /* loop through options: */
+  for (let model_option in model_options) {
+    /* skip the options which should be skipped: */
+    if (skip_options.indexOf(model_option) > -1) {
+      continue;
+    };
+    /* get value for the option: */
+    let option_value = model_options[model_option];
+    /* html for this option: */
+    let option_html =
+      '<tt>' + model_option + ' = ' + option_value + '</tt><br>';
+    params_html += option_html;
+  };
+  /* update html: */
+  model_params_el.innerHTML = params_html;
+};
+
 /* fasctlimate model running function: */
 async function run_model() {
   /* get python code: */
@@ -2112,6 +2141,8 @@ async function run_model() {
   plot_container_el.style.display = site_vars['plot_container_el_display'];
   /* draw the plots: */
   draw_plots();
+  /* add paramater text info: */
+  display_params();
 }
 
 
