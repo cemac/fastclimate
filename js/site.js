@@ -296,7 +296,9 @@ let site_vars = {
     'His': 'His_plot',
     'Hin': 'Hin_plot',
     'TTsavgmean': 'TTsavgmean_plot',
-    'TTsavglat': 'TTsavglat_plot'
+    'TTsavglat': 'TTsavglat_plot',
+    'TTsavgb': 'TTsavgb_plot',
+    'TTsavgb_diff': 'TTsavgb_diff_plot'
   },
   /* color scales: */
   'colorscales': {
@@ -1667,6 +1669,149 @@ function plot_TTsavglat(plot_el) {
   Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
 };
 
+/* plot TTsavgb: */
+function plot_TTsavgb() {
+  /* get name of element for plot: */
+  let plot_el = site_vars['plot_els']['TTsavgb'];
+  /* get values to plot: */
+  let y = site_vars['result']['l'];
+  let TTsavg = site_vars['result']['TTsavg'];
+  let nit = site_vars['result']['nit'];
+  let ttp = site_vars['result']['ttp'];
+  /* need to extract finalplotyears values: */
+  let x = [];
+  let z = [];
+  for (let i = 0; i < TTsavg.length; i++) {
+    z[i] = [];
+    for (let j = 0; j < nit.length; j++) {
+      let nitj = nit[j];
+      x[j] = ttp[j].toFixed(2);
+      z[i][j] = TTsavg[i][nitj].toFixed(2);
+    };
+  };
+  /* create hover text: */
+  let hovertext = [];
+  for (let i = 0; i < z.length; i++) {
+    hovertext[i] = [];
+    for (let j = 0; j < z[i].length; j++) {
+      hovertext[i][j] =
+        'Years from now: ' + x[j] + '<br>' +
+        'Latitude:' + y[i] + '<br>' +
+        'Surface Temperature (°C):' + z[i][j];
+    };
+  };
+  /* contour plot: */
+  let contour_plot = {
+    'name': 'contour_TTsavgb',
+    'type': 'contour',
+    'colorscale': 'Jet',
+    'x': x,
+    'y': y,
+    'z': z,
+    'hoverinfo': 'text',
+    'text': hovertext
+  };
+  let contour_data = [contour_plot];
+  /* contour layout: */
+  let contour_layout = {
+    'title': {
+      'text': 'Surface Temperature (°C)',
+      'y': 0.9
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Year from now'
+      }
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Latitude'
+      }
+    }
+  };
+  /* contour config: */
+  let contour_conf = site_vars['plot_conf'];
+  /* draw the plot: */
+  Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
+};
+
+/* plot TTsavgb difference: */
+function plot_TTsavgb_diff() {
+  /* get name of element for plot: */
+  let plot_el = site_vars['plot_els']['TTsavgb_diff'];
+  /* get values to plot: */
+  let y = site_vars['result']['l'];
+  let TTsavg = site_vars['result']['TTsavg'];
+  let TTsavg1 = site_vars['comparewith']['TTsavg1'];
+  let nit = site_vars['result']['nit'];
+  let ttp = site_vars['result']['ttp'];
+  let colorscale = site_vars['colorscales']['RdBu'];
+  /* need to extract finalplotyears values: */
+  let x = [];
+  let z = [];
+  let z_min_max = -999999;
+  for (let i = 0; i < TTsavg.length; i++) {
+    z[i] = [];
+    for (let j = 0; j < nit.length; j++) {
+      let nitj = nit[j];
+      x[j] = ttp[j].toFixed(2);
+      z[i][j] = (
+        TTsavg[i][nitj] - TTsavg1[i][nitj]
+      ).toFixed(2);
+      z_min_max = Math.max(z_min_max, Math.abs(Math.round(z[i][j])));
+    };
+  };
+  if (z_min_max == 0) {
+    z_min_max += 1;
+  };
+  /* create hover text: */
+  let hovertext = [];
+  for (let i = 0; i < z.length; i++) {
+    hovertext[i] = [];
+    for (let j = 0; j < z[i].length; j++) {
+      hovertext[i][j] =
+        'Years from now: ' + x[j] + '<br>' +
+        'Latitude:' + y[i] + '<br>' +
+        'Surface Temperature Difference (°C):' + z[i][j];
+    };
+  };
+  /* contour plot: */
+  let contour_plot = {
+    'name': 'contour_TTsavgb',
+    'type': 'contour',
+    'colorscale': colorscale,
+    'x': x,
+    'y': y,
+    'z': z,
+    'zmin': -z_min_max,
+    'zmax': z_min_max,
+    'hoverinfo': 'text',
+    'text': hovertext
+  };
+  let contour_data = [contour_plot];
+  /* contour layout: */
+  let contour_layout = {
+    'title': {
+      'text': 'Surface Temperature Difference (°C)',
+      'y': 0.9
+    },
+    'xaxis': {
+      'title': {
+        'text': 'Year from now'
+      }
+    },
+    'yaxis': {
+      'title': {
+        'text': 'Latitude'
+      }
+    }
+  };
+  /* contour config: */
+  let contour_conf = site_vars['plot_conf'];
+  /* draw the plot: */
+  Plotly.react(plot_el, contour_data, contour_layout, contour_conf);
+};
+
 /* plot creating function: */
 function draw_plots() {
   /* swtop: */
@@ -1707,6 +1852,10 @@ function draw_plots() {
   plot_TTsavgmean(site_vars['plot_els']['TTsavgmean']);
   /* TTsavglat: */
   plot_TTsavglat(site_vars['plot_els']['TTsavglat']);
+  /* TTsavgb: */
+  plot_TTsavgb();
+  /* TTsavgb difference: */
+  plot_TTsavgb_diff();
 };
 
 /* fasctlimate model running function: */
