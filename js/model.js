@@ -281,26 +281,26 @@ let site_vars = {
   /* plot container element: */
   'plot_container_el': document.getElementById('content_plots'),
   'plot_container_el_display': null,
-  /* plot elements: */
-  'plot_els': {
-    'swtop': 'swtop_plot',
-    'TTsavg': 'TTsavg_plot',
-    'TTsavg_diff': 'TTsavg_diff_plot',
-    'Hi': 'Hi_plot',
-    'Hi_diff': 'Hi_diff_plot',
-    'TTsavgsp': 'TTsavgsp_plot',
-    'TTsavgnp': 'TTsavgnp_plot',
-    'TTsavg65s': 'TTsavg65s_plot',
-    'TTsavg65n': 'TTsavg65n_plot',
-    'TTsavg5n': 'TTsavg5n_plot',
-    'His': 'His_plot',
-    'Hin': 'Hin_plot',
-    'TTsavgmean': 'TTsavgmean_plot',
-    'TTsavglat': 'TTsavglat_plot',
-    'TTsavgb': 'TTsavgb_plot',
-    'TTsavgb_diff': 'TTsavgb_diff_plot',
-    'Hib': 'Hib_plot',
-    'Hib_diff': 'Hib_diff_plot'
+  /* plots and plot elements: */
+  'plots': {
+    'swtop': {'el': 'swtop_plot', 'fig': 1, 'plot': null},
+    'TTsavg': {'el': 'TTsavg_plot', 'fig': 2, 'plot': null},
+    'TTsavg_diff': {'el': 'TTsavg_diff_plot', 'fig': 3, 'plot': null},
+    'Hi': {'el': 'Hi_plot', 'fig': 4, 'plot': null},
+    'Hi_diff': {'el': 'Hi_diff_plot', 'fig': 5, 'plot': null},
+    'TTsavgsp': {'el': 'TTsavgsp_plot', 'fig': 6, 'plot': null},
+    'TTsavgnp': {'el': 'TTsavgnp_plot', 'fig': 7, 'plot': null},
+    'TTsavg65s': {'el': 'TTsavg65s_plot', 'fig': 8, 'plot': null},
+    'TTsavg65n': {'el': 'TTsavg65n_plot', 'fig': 9, 'plot': null},
+    'TTsavg5n': {'el': 'TTsavg5n_plot', 'fig': 10, 'plot': null},
+    'His': {'el': 'His_plot', 'fig': 11, 'plot': null},
+    'Hin': {'el': 'Hin_plot', 'fig': 12, 'plot': null},
+    'TTsavgmean': {'el': 'TTsavgmean_plot', 'fig': 13, 'plot': null},
+    'TTsavglat': {'el': 'TTsavglat_plot', 'fig': 14, 'plot': null},
+    'TTsavgb': {'el': 'TTsavgb_plot', 'fig': 15, 'plot': null},
+    'TTsavgb_diff': {'el': 'TTsavgb_diff_plot', 'fig': 16, 'plot': null},
+    'Hib': {'el': 'Hib_plot', 'fig': 17, 'plot': null},
+    'Hib_diff': {'el': 'Hib_diff_plot', 'fig': 18, 'plot': null}
   },
   /* model parameters text element: */
   'model_params_el': document.getElementById('model_params_params'),
@@ -643,7 +643,7 @@ async function load_data() {
 /* plot swtop: */
 function plot_swtop() {
   /* get name of element for plot: */
-  let plot_el = site_vars['plot_els']['swtop'];
+  let plot_el = site_vars['plots']['swtop']['el'];
   /* get values to plot: */
   let x = site_vars['result']['doy'];
   let y = site_vars['result']['l'];
@@ -713,7 +713,7 @@ function plot_swtop() {
 /* plot TTsavg: */
 function plot_TTsavg() {
   /* get name of element for plot: */
-  let plot_el = site_vars['plot_els']['TTsavg'];
+  let plot_el = site_vars['plots']['TTsavg']['el'];
   /* get values to plot: */
   let y = site_vars['result']['l'];
   let TTsavg = site_vars['result']['TTsavg'];
@@ -799,7 +799,7 @@ function plot_TTsavg() {
 /* plot TTsavg difference: */
 function plot_TTsavg_diff() {
   /* get name of element for plot: */
-  let plot_el = site_vars['plot_els']['TTsavg_diff'];
+  let plot_el = site_vars['plots']['TTsavg_diff']['el'];
   /* get values to plot: */
   let y = site_vars['result']['l'];
   let TTsavg = site_vars['result']['TTsavg'];
@@ -894,7 +894,7 @@ function plot_TTsavg_diff() {
 /* plot Hi: */
 function plot_Hi() {
   /* get name of element for plot: */
-  let plot_el = site_vars['plot_els']['Hi'];
+  let plot_el = site_vars['plots']['Hi']['el'];
   /* get values to plot: */
   let l = site_vars['result']['l'];
   let Hi = site_vars['result']['Hi'];
@@ -1010,7 +1010,7 @@ function plot_Hi() {
 /* plot Hi difference: */
 function plot_Hi_diff() {
   /* get name of element for plot: */
-  let plot_el = site_vars['plot_els']['Hi_diff'];
+  let plot_el = site_vars['plots']['Hi_diff']['el'];
   /* get values to plot: */
   let l = site_vars['result']['l'];
   let Hi = site_vars['result']['Hi'];
@@ -1713,7 +1713,7 @@ function plot_TTsavglat(plot_el) {
 /* plot TTsavgb: */
 function plot_TTsavgb() {
   /* get name of element for plot: */
-  let plot_el = site_vars['plot_els']['TTsavgb'];
+  let plot_el = site_vars['plots']['TTsavgb']['el'];
   /* get values to plot: */
   let y = site_vars['result']['l'];
   let TTsavg = site_vars['result']['TTsavg'];
@@ -1779,7 +1779,7 @@ function plot_TTsavgb() {
 /* plot TTsavgb difference: */
 function plot_TTsavgb_diff() {
   /* get name of element for plot: */
-  let plot_el = site_vars['plot_els']['TTsavgb_diff'];
+  let plot_el = site_vars['plots']['TTsavgb_diff']['el'];
   /* get values to plot: */
   let y = site_vars['result']['l'];
   let TTsavg = site_vars['result']['TTsavg'];
@@ -1856,7 +1856,7 @@ function plot_TTsavgb_diff() {
 /* plot Hib: */
 function plot_Hib() {
   /* get name of element for plot: */
-  let plot_el = site_vars['plot_els']['Hib'];
+  let plot_el = site_vars['plots']['Hib']['el'];
   /* get values to plot: */
   let l = site_vars['result']['l'];
   let Hi = site_vars['result']['Hi'];
@@ -1951,7 +1951,7 @@ function plot_Hib() {
 /* plot Hib difference: */
 function plot_Hib_diff() {
   /* get name of element for plot: */
-  let plot_el = site_vars['plot_els']['Hib_diff'];
+  let plot_el = site_vars['plots']['Hib_diff']['el'];
   /* get values to plot: */
   let l = site_vars['result']['l'];
   let Hi = site_vars['result']['Hi'];
@@ -2065,33 +2065,33 @@ function draw_plots() {
   /* Hi difference: */
   plot_Hi_diff();
   /* TTsavgsp: */
-  plot_TTsavg_ts(site_vars['plot_els']['TTsavgsp'], 0, -22, 'South Pole');
+  plot_TTsavg_ts(site_vars['plots']['TTsavgsp']['el'], 0, -22, 'South Pole');
   /* TTsavgnp: */
-  plot_TTsavg_ts(site_vars['plot_els']['TTsavgnp'], 17, 0, 'North Pole');
+  plot_TTsavg_ts(site_vars['plots']['TTsavgnp']['el'], 17, 0, 'North Pole');
   /* TTsavg65s: */
-  plot_TTsavg_ts(site_vars['plot_els']['TTsavg65s'], 3, 0, '65°S');
+  plot_TTsavg_ts(site_vars['plots']['TTsavg65s']['el'], 3, 0, '65°S');
   /* TTsavg65n: */
-  plot_TTsavg_ts(site_vars['plot_els']['TTsavg65n'], 15, 0, '65°N');
+  plot_TTsavg_ts(site_vars['plots']['TTsavg65n']['el'], 15, 0, '65°N');
   /* TTsavg5n: */
-  plot_TTsavg_ts(site_vars['plot_els']['TTsavg5n'], 9, 0, '5°N');
+  plot_TTsavg_ts(site_vars['plots']['TTsavg5n']['el'], 9, 0, '5°N');
   /* His: */
   plot_Hi_ts(
-    site_vars['plot_els']['His'],
+    site_vars['plots']['His']['el'],
     [1, 2, 3, 8],
     ['75°S', '65°S', '55°S', '45°S'],
     'Southern Hemisphere'
   );
   /* Hin: */
   plot_Hi_ts(
-    site_vars['plot_els']['Hin'],
+    site_vars['plots']['Hin']['el'],
     [17, 16, 15, 14],
     ['85°N', '75°N', '65°N', '55°N'],
     'Northern Hemisphere'
   );
   /* TTsavgmean: */
-  plot_TTsavgmean(site_vars['plot_els']['TTsavgmean']);
+  plot_TTsavgmean(site_vars['plots']['TTsavgmean']['el']);
   /* TTsavglat: */
-  plot_TTsavglat(site_vars['plot_els']['TTsavglat']);
+  plot_TTsavglat(site_vars['plots']['TTsavglat']['el']);
   /* TTsavgb: */
   plot_TTsavgb();
   /* TTsavgb difference: */
