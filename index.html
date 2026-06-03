@@ -24,6 +24,9 @@
     <script src="js/plotly.js"
             charset="utf-8">
     </script>
+    <script src="js/zip.js"
+            charset="utf-8">
+    </script>
     <script src="js/model.js"
             charset="utf-8"
             defer>
@@ -395,6 +398,20 @@
               </div>
             </div>
 
+            <div id="save_plots_row"
+                 class="row_wrap flex_start">
+              <div class="content_plot_container column">
+                <div id="content_save_plots"
+                     class="content_save row">
+                  <button id="content_save_plots_button"
+                          class="content_save_button"
+                          title="Save plots in png format to zip file">
+                    save plots
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <div id="model_params_row"
                  class="row_wrap flex_start">
               <div class="content_plot_container column">
@@ -405,9 +422,9 @@
                 <div id="model_params_params"
                      class="content_plot_text flex_grow">
                 </div>
-                <div id="content_save"
+                <div id="content_save_options"
                   class="content_save row">
-                  <button id="content_save_button"
+                  <button id="content_save_options_button"
                           class="content_save_button"
                           title="Save parameters to JSON file">
                     save parameters

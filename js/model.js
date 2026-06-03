@@ -364,8 +364,20 @@ let site_vars = {
   'load_button_el': document.getElementById('content_load_input'),
   'load_info_el': document.getElementById('content_load_info'),
   'load_error_el': document.getElementById('content_load_error'),
-  /* save button element: */
-  'save_button_el': document.getElementById('content_save_button')
+  /* save plots button element: */
+  'save_plots_button_el': document.getElementById(
+    'content_save_plots_button'
+  ),
+  /* plot saving options: */
+  'save_plots_options': {
+    'format': 'png',
+    'width': 1200,
+    'height': 750
+  },
+  /* save options button element: */
+  'save_options_button_el': document.getElementById(
+    'content_save_options_button'
+  )
 };
 
 
@@ -480,9 +492,12 @@ function add_listeners() {
   /* add load button listener: */
   let load_button_el = site_vars['load_button_el'];
   load_button_el.addEventListener('change', load_options);
-  /* add save button listener: */
-  let save_button_el = site_vars['save_button_el'];
-  save_button_el.addEventListener('click', save_options);
+  /* add save plots button listener: */
+  let save_plots_button_el = site_vars['save_plots_button_el'];
+  save_plots_button_el.addEventListener('click', save_plots);
+  /* add save options button listener: */
+  let save_options_button_el = site_vars['save_options_button_el'];
+  save_options_button_el.addEventListener('click', save_options);
 };
 
 /* set initial option values: */
@@ -1683,31 +1698,6 @@ function plot_TTsavglat(plot_el) {
   let scatter_conf = site_vars['plot_conf'];
   /* draw the plot: */
   Plotly.react(plot_el, scatter_data, scatter_layout, scatter_conf);
-
-
-
-/*
-  Plotly.toImage(plot_el, {
-    'format': 'png',
-    'width': 1200,
-    'height': 750
-  }).then(function(image_data) {
-    let image_name = 'plot.png';
-    let image_link = document.createElement('a');
-    image_link.setAttribute('href', image_data);
-    image_link.setAttribute('download', image_name);
-    image_link.style.visibility = 'hidden';
-    document.body.appendChild(image_link);
-    image_link.click();
-    document.body.removeChild(image_link);
-  });
-
-  https://stackoverflow.com/a/39515846
-
-*/
-
-
-
 };
 
 /* plot TTsavgb: */
@@ -2249,6 +2239,48 @@ function load_options() {
   file_reader.readAsText(options_file);
 };
 
+/* plots saving funcion: */
+async function save_plots() {
+  /* get plots: */
+  let plots = site_vars['plots'];
+  /* get plot saving options: */
+  let save_plots_options = site_vars['save_plots_options'];
+
+  /* create zip writer object: */
+  let zip_writer = new zip.ZipWriter(
+    new zip.Data64URIWriter('application/zip')
+  );
+
+  /* loop through plots: */
+  for (let plot in plots) {
+    /* info for this plot: */
+    let this_plot = plots[plot];
+    let this_plot_el = this_plot['el'];
+    let this_plot_fig = this_plot['fig'];
+    let this_plot_file_name = 'figure' + this_plot_fig +
+                              '.' + save_plots_options['format'];
+    /* export plot as image: */
+    await Plotly.toImage(this_plot_el, save_plots_options).then(
+      async function(image_data) {
+        /* add image data to zip file: */
+        await zip_writer.add(
+          this_plot_file_name, new zip.Data64URIReader(image_data)
+        );
+      }
+    );
+  };
+  /* close zip file and get encoded data uri: */
+  let data_uri = await zip_writer.close();
+  /* create element for download link and click: */
+  let zip_link = document.createElement('a');
+  zip_link.setAttribute('href', data_uri);
+  zip_link.setAttribute('download', 'fastclimate_plots.zip');
+  zip_link.style.visibility = 'hidden';
+  document.body.appendChild(zip_link);
+  zip_link.click();
+  document.body.removeChild(zip_link);
+};
+
 /* options saving funcion: */
 function save_options() {
   /* get model options: */
@@ -2282,6 +2314,17 @@ function save_options() {
 
 /* on window load ... : */
 window.addEventListener('load', function() {
+  /* configure zip.js: */
+  zip.configure({
+    useWebWorkers: true,
+    maxWorkers: 2,
+    workerScripts: {
+      deflate: [
+        'js/z-worker-fflate.js',
+        'js/fflate.min.js'
+      ]
+    }
+  });
   /* add options inputs: */
   add_options();
   /* hide some elements ... : */
