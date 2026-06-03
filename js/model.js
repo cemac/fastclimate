@@ -2318,12 +2318,6 @@ window.addEventListener('load', function() {
   zip.configure({
     useWebWorkers: true,
     maxWorkers: 2,
-    workerScripts: {
-      deflate: [
-        'js/z-worker-fflate.js',
-        'js/fflate.min.js'
-      ]
-    }
   });
   /* add options inputs: */
   add_options();
