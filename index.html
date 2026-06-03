@@ -93,6 +93,26 @@
           <h3 class="content_options_header">Model Parameters</h3>
           <div id="content_options"
                class="content_options content_text column">
+            <div id="content_load"
+              class="content_load row">
+              <input id="content_load_input"
+                     class="content_load_input"
+                     type="file"
+                     accept=".json,application/json">
+              <label id="content_load_button"
+                     class="content_load_button"
+                     for="content_load_input"
+                     title="Load parameters from JSON file">
+                load parameters
+              </label>
+            </div>
+            <div id="content_load_text"
+              class="content_load_text row">
+              <span id="content_load_info"
+                    class="content_load_info"></span>
+              <span id="content_load_error"
+                    class="content_load_error"></span>
+            </div>
           </div>
           <!-- run model button: __________________________________________ -->
           <div id="content_run"
@@ -388,7 +408,8 @@
                 <div id="content_save"
                   class="content_save row">
                   <button id="content_save_button"
-                          class="content_save_button">
+                          class="content_save_button"
+                          title="Save parameters to JSON file">
                     save parameters
                   </button>
                 </div>

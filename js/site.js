@@ -360,6 +360,10 @@ let site_vars = {
   'python_path': 'fastclimate.py',
   /* result goes here: */
   'result': null,
+  /* option load elements: */
+  'load_button_el': document.getElementById('content_load_input'),
+  'load_info_el': document.getElementById('content_load_info'),
+  'load_error_el': document.getElementById('content_load_error'),
   /* save button element: */
   'save_button_el': document.getElementById('content_save_button')
 };
@@ -473,6 +477,9 @@ function add_listeners() {
   let run_button_el = site_vars['run_button_el'];
   /* add click listener: */
   run_button_el.addEventListener('click', load_data);
+  /* add load button listener: */
+  let load_button_el = site_vars['load_button_el'];
+  load_button_el.addEventListener('change', load_options);
   /* add save button listener: */
   let save_button_el = site_vars['save_button_el'];
   save_button_el.addEventListener('click', save_options);
@@ -2175,10 +2182,81 @@ async function run_model() {
   display_params();
 }
 
+/* options loading funcion: */
+function load_options() {
+  /* get input elements: */
+  let load_input = site_vars['load_button_el'];
+  let load_info = site_vars['load_info_el'];
+  let load_error = site_vars['load_error_el'];
+  /* get model options: */
+  let model_options = site_vars['model_options'];
+  /* clear info and error elements: */
+  load_info.innerHTML = '';
+  load_error.innerHTML = '';
+  /* get file information: */
+  let options_file = load_input.files[0];
+  /* if no file, give up: */
+  if ((options_file == undefined) || (options_file == null)) {
+    return;
+  };
+  let options_file_name = options_file.name;
+  let options_file_type = options_file.type;
+  /* check file type: */
+  if (options_file_type != 'application/json') {
+    load_error.innerHTML = 'incorrect file type: ' + options_file_name;
+    return;
+  };
+  /* create file reader: */
+  let file_reader = new FileReader();
+  /* file reader onload function: */
+  file_reader.onload = function(file_data) {
+    /* get file text: */
+    let options_text = file_data.target.result;
+    /* try to read json data or give up: */
+    let options_json = null;
+    try {
+      options_json = JSON.parse(options_text);
+    } catch {
+      load_error.innerHTML = 'error reading file: ' + options_file_name;
+      return;
+    };
+    /* loop through model options: */
+    for (let model_option in model_options) {
+      /* if this option is in loaded file: */
+      if ((options_json[model_option] != undefined) &&
+          (options_json[model_option] != null)) {
+        /* update the option value: */
+        let model_option_el = site_vars['options'][model_option]['value_el'];
+        model_option_el.value = options_json[model_option];
+      };
+    };
+    /* display info message: */
+    load_info.innerHTML = 'parameters loaded from file: ' + options_file_name;
+    /* validate option values: */
+    validate_options();
+  };
+  /* file reader onerror function: */
+  file_reader.onerror = function(file_data) {
+    /* get error: */
+    let options_error = file_data.target.error;
+    /* display error message: */
+    load_error.innerHTML = 'error reading file: ' + options_file_name +
+                           options_error;
+    /* give up: */
+    return;
+  };
+  /* read the file: */
+  file_reader.readAsText(options_file);
+};
+
 /* options saving funcion: */
 function save_options() {
   /* get model options: */
   let model_options = site_vars['model_options'];
+  /* remove these options: */
+  delete model_options['dtday'];
+  delete model_options['savestep'];
+  delete model_options['comparewith'];
   /* jsonify: */
   let model_options_json = JSON.stringify(model_options);
   /* file name for output: */
