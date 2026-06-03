@@ -368,6 +368,9 @@ let site_vars = {
   'save_plots_button_el': document.getElementById(
     'content_save_plots_button'
   ),
+  'save_plots_spinner_el': document.getElementById(
+    'content_save_plots_spinner'
+  ),
   /* plot saving options: */
   'save_plots_options': {
     'format': 'png',
@@ -2157,7 +2160,7 @@ async function run_model() {
   let model_spinner_el = site_vars['model_spinner_el'];
   /* get run button element: */
   let run_button_el = site_vars['run_button_el'];
-  /* enable spinner: */
+  /* disable spinner: */
   model_spinner_el.style.display = 'none';
   /* enable run button: */
   run_button_el.removeAttribute('disabled');
@@ -2241,16 +2244,23 @@ function load_options() {
 
 /* plots saving funcion: */
 async function save_plots() {
+  /* get spinner element: */
+  let save_plots_spinner_el = site_vars['save_plots_spinner_el'];
+  /* get save button element: */
+  let save_plots_button_el = site_vars['save_plots_button_el'];
+  /* disable save button: */
+  save_plots_button_el.setAttribute('disabled', true);
+  save_plots_button_el.style.display = 'none';
+  /* enable spinner: */
+  save_plots_spinner_el.style.display = 'inline';
   /* get plots: */
   let plots = site_vars['plots'];
   /* get plot saving options: */
   let save_plots_options = site_vars['save_plots_options'];
-
   /* create zip writer object: */
   let zip_writer = new zip.ZipWriter(
     new zip.Data64URIWriter('application/zip')
   );
-
   /* loop through plots: */
   for (let plot in plots) {
     /* info for this plot: */
@@ -2279,6 +2289,11 @@ async function save_plots() {
   document.body.appendChild(zip_link);
   zip_link.click();
   document.body.removeChild(zip_link);
+  /* disable spinner: */
+  save_plots_spinner_el.style.display = 'none';
+  /* enable run button: */
+  save_plots_button_el.removeAttribute('disabled');
+  save_plots_button_el.style.display = site_vars['run_button_display'];
 };
 
 /* options saving funcion: */
