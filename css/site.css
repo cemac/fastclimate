@@ -413,7 +413,8 @@ h4 a {
 }
 
 #save_plots_row,
-#model_params_row {
+#model_params_row,
+#content_save_options {
   margin-top: 2em;
 }
 
@@ -463,6 +464,17 @@ h4 a {
 
 .content_about a:hover {
   color: #484848;
+}
+
+.about_img {
+  margin: 1em;
+  margin-top: 3em;
+  max-width: 90%;
+}
+
+.about_img_text {
+  padding-left: 2em;
+  margin-left: 1em;
 }
 
 /** footer: **/

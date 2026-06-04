@@ -1887,7 +1887,7 @@ function plot_Hib() {
         hovertext[i][j] =
           'Years from now: ' + x[j] + '<br>' +
           'Latitude:' + y[i] + '<br>' +
-          'Ice Thickness (m):' + z[i][j];
+          'Sea Ice Thickness (m):' + z[i][j];
       };
     };
   };
@@ -1919,7 +1919,7 @@ function plot_Hib() {
   /* contour layout: */
   let contour_layout = {
     'title': {
-      'text': 'Ice Thickness (m)',
+      'text': 'Sea Ice Thickness (m)',
       'y': 0.9
     },
     'xaxis': {
@@ -1989,7 +1989,7 @@ function plot_Hib_diff() {
         hovertext[i][j] =
           'Years from now: ' + x[j] + '<br>' +
           'Latitude:' + y[i] + '<br>' +
-          'Ice Thickness Difference (m):' + z[i][j];
+          'Sea Ice Thickness Difference (m):' + z[i][j];
       };
     };
   };
@@ -2023,7 +2023,7 @@ function plot_Hib_diff() {
   /* contour layout: */
   let contour_layout = {
     'title': {
-      'text': 'Ice Thickness Difference (m)',
+      'text': 'Sea Ice Thickness Difference (m)',
       'y': 0.9
     },
     'xaxis': {
