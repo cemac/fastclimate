@@ -15,7 +15,7 @@ let site_vars = {
     'tinit_2co2': 'tinit_2co2.json',
     'tinit': 'tinit.json'
   },
-  'comparewith_file': '35yearstandard.json',
+  'comparewith_file': '100yearstandard.json',
   /* model options informations: */
   'options_el': document.getElementById('content_options'),
   'options': {
@@ -262,7 +262,7 @@ let site_vars = {
       'label': 'Length of model run',
       'units': 'years',
       'min': 2,
-      'max': 35,
+      'max': 100,
       'default': 15
     },
     'plotyears': {
@@ -270,7 +270,7 @@ let site_vars = {
       'label': 'Number of years to plot (the last <tt>plotyears</tt> years are plotted)',
       'units': 'years',
       'min': 1,
-      'max': 35,
+      'max': 100,
       'default': 2
     }
   },
