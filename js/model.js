@@ -25,6 +25,7 @@ let site_vars = {
       'units': '°C or K',
       'min': -100,
       'max': 100,
+      'int': false,
       'default': 0
     },
     'iceoffset': {
@@ -33,6 +34,7 @@ let site_vars = {
       'units': 'm (metres)',
       'min': -50,
       'max': 50,
+      'int': false,
       'default': 0
     },
     'co2': {
@@ -40,6 +42,7 @@ let site_vars = {
       'label': 'Simulated CO2 concentration (1=today)',
       'min': 0.1,
       'max': 10,
+      'int': false,
       'default': 1.0
     },
     'sc': {
@@ -48,6 +51,7 @@ let site_vars = {
       'units': 'J/s/m²',
       'min': 1000,
       'max': 1700,
+      'int': false,
       'default': 1365
     },
     'albsnow': {
@@ -55,6 +59,7 @@ let site_vars = {
       'label': 'albedo of snow-covered land surfaces (except Antarctica)',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.73
     },
     'albsnowant': {
@@ -62,6 +67,7 @@ let site_vars = {
       'label': 'albedo of surface in Antarctica (higher because no trees)',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.85
     },
     'albbare': {
@@ -69,6 +75,7 @@ let site_vars = {
       'label': 'albedo of non-ice land',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.15
     },
     'albonoice': {
@@ -76,6 +83,7 @@ let site_vars = {
       'label': 'albedo of ice-free ocean',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.08
     },
     'alboicewin': {
@@ -83,6 +91,7 @@ let site_vars = {
       'label': 'thick ice winter albedo',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.75
     },
     'alboicesum': {
@@ -90,6 +99,7 @@ let site_vars = {
       'label': 'thick ice summer albedo',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.65
     },
     'albatm': {
@@ -97,6 +107,7 @@ let site_vars = {
       'label': 'atmosphere and cloud albedo',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.26
     },
     'absair': {
@@ -104,6 +115,7 @@ let site_vars = {
       'label': 'atmosphere and cloud shortwave absorption parameter',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.18
     },
     'epsua1': {
@@ -111,6 +123,7 @@ let site_vars = {
       'label': 'upwelling atmospheric emissivity',
       'min': 0.1,
       'max': 2,
+      'int': false,
       'default': 0.9
     },
     'epsba1': {
@@ -118,6 +131,7 @@ let site_vars = {
       'label': 'downwelling atmospheric emissivity',
       'min': 0.1,
       'max': 2,
+      'int': false,
       'default': 1.22
     },
     'epsa1': {
@@ -125,6 +139,7 @@ let site_vars = {
       'label': 'total atmosphere LW absorptivity',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.945
     },
     'epssfc': {
@@ -132,6 +147,7 @@ let site_vars = {
       'label': 'Surface/ABL emmissivity',
       'min': 0.1,
       'max': 1,
+      'int': false,
       'default': 1
     },
     'Kha': {
@@ -141,6 +157,7 @@ let site_vars = {
       'min': 0,
       'max': 3000,
       'default': 1100,
+      'int': false,
       'note': '* Decrease <tt>dtday</tt> for <tt>Kha</tt> > <tt>1500</tt>'
     },
     'Kho1': {
@@ -149,6 +166,7 @@ let site_vars = {
       'units': 'J lat²/s/m²/K',
       'min': 0,
       'max': 2000,
+      'int': false,
       'default': 300
     },
     'Khicefactor': {
@@ -157,6 +175,7 @@ let site_vars = {
       'units': 'm³K/J',
       'min': 0,
       'max': 2e-7,
+      'int': false,
       'default': 3.3e-8
     },
     'Va1': {
@@ -165,6 +184,7 @@ let site_vars = {
       'units': '°C or K',
       'min': 10,
       'max': 50,
+      'int': false,
       'default': 26
     },
     'Kva': {
@@ -173,6 +193,7 @@ let site_vars = {
       'units': 'J/s/m²/K',
       'min': 0,
       'max': 100,
+      'int': false,
       'default': 35
     },
     'Kicethick': {
@@ -181,6 +202,7 @@ let site_vars = {
       'units': 'J/s/m/K',
       'min': 0.02,
       'max': 2.5,
+      'int': false,
       'default': 0.8
     },
     'Kicethin': {
@@ -189,6 +211,7 @@ let site_vars = {
       'units': 'J/s/m/K',
       'min': 0.5,
       'max': 3,
+      'int': false,
       'default': 2
     },
     'zicethick': {
@@ -197,6 +220,7 @@ let site_vars = {
       'units': 'm',
       'min': 0,
       'max': 3,
+      'int': false,
       'default': 0.5
     },
     'leadfraction': {
@@ -205,6 +229,7 @@ let site_vars = {
       'units': 'fraction',
       'min': 0,
       'max': 1,
+      'int': false,
       'default': 0.05
     },
     'Csl': {
@@ -214,6 +239,7 @@ let site_vars = {
       'min': 2e4,
       'max': 1e8,
       'default': 4e6,
+      'int': false,
       'note': '* Decrease <tt>dtday</tt> for <tt>Csl</tt> < <tt>2e6</tt>'
     },
     'Css': {
@@ -223,6 +249,7 @@ let site_vars = {
       'min': 2e4,
       'max': 1e8,
       'default': 2e6,
+      'int': false,
       'note': '* Decrease <tt>dtday</tt> for <tt>Css</tt> < <tt>2e6</tt>'
     },
     'Tsnowtotal': {
@@ -231,6 +258,7 @@ let site_vars = {
       'units': 'K',
       'min': 250,
       'max': 274,
+      'int': false,
       'default': 269
     },
     'Tsnowstart': {
@@ -239,6 +267,7 @@ let site_vars = {
       'units': 'K',
       'min': 272,
       'max': 290,
+      'int': false,
       'default': 278
     },
     'hocean': {
@@ -247,6 +276,7 @@ let site_vars = {
       'units': 'metres',
       'min': 5,
       'max': 5000,
+      'int': false,
       'default': 50
     },
     'qocean1': {
@@ -255,6 +285,7 @@ let site_vars = {
       'units': 'J/s/m²',
       'min': -100,
       'max': 500,
+      'int': false,
       'default': 2
     },
     'tmax': {
@@ -263,14 +294,25 @@ let site_vars = {
       'units': 'years',
       'min': 2,
       'max': 100,
+      'int': true,
       'default': 15
+    },
+    'plotstart': {
+      'section': 'Plotting parameters',
+      'label': 'The initial year to plot',
+      'units': 'years',
+      'min': 0,
+      'max': 98,
+      'int': true,
+      'default': 13
     },
     'plotyears': {
       'section': 'Plotting parameters',
-      'label': 'Number of years to plot (the last <tt>plotyears</tt> years are plotted)',
+      'label': 'Number of years to plot',
       'units': 'years',
       'min': 1,
       'max': 100,
+      'int': true,
       'default': 2
     }
   },
@@ -452,8 +494,11 @@ function validate_options() {
     let option_label = my_options['label'];
     let option_min = my_options['min'];
     let option_max = my_options['max'];
+    let option_int = my_options['int'];
     /* check value: */
-    let check_value = check_numeric(option_label, option_value, option_min, option_max);
+    let check_value = check_numeric(
+      option_label, option_value, option_min, option_max, option_int
+    );
     /* if o.k., store value: */
     if (check_value['status'] == true) {
       site_vars['model_options'][option] = parseFloat(option_value);
@@ -465,6 +510,36 @@ function validate_options() {
       option_error_el.innerHTML = check_value['message'];
       option_error_el.style.display = 'inline';
       option_value_el.style.borderColor = option_border_err;
+    };
+  };
+  /* check plotstart and plotyears values: */
+  let tmax_value = options['tmax']['value_el'].value;
+  let plotstart_value_el = options['plotstart']['value_el'];
+  let plotstart_value = plotstart_value_el.value;
+  let plotstart_error_el = options['plotstart']['error_el'];
+  let plotyears_value_el = options['plotyears']['value_el'];
+  let plotyears_value = plotyears_value_el.value;
+  let plotyears_error_el = options['plotyears']['error_el'];
+  /* if plotstart is numeric: */
+  if (isFinite(plotstart_value)) {
+    /* plotstart should be at least 1 years shorter than tmax: */
+    if (plotstart_value > (tmax_value - 1)) {
+      site_vars['model_options_ok'] = false;
+      plotstart_error_el.innerHTML = 'Value must be no greater than ' +
+                                     (tmax_value - 1);
+      plotstart_error_el.style.display = 'inline';
+      plotstart_error_el.style.borderColor = option_border_err;
+    };
+  };
+  /* if plotyears is numeric: */
+  if (isFinite(plotyears_value)) {
+    /* plotyears should not be greater than tmax - plotstart: */
+    if (plotyears_value > (tmax_value - plotstart_value)) {
+      site_vars['model_options_ok'] = false;
+      plotyears_error_el.innerHTML = 'Value must be no greater than ' +
+                                     (tmax_value - plotstart_value);
+      plotyears_error_el.style.display = 'inline';
+      plotyears_error_el.style.borderColor = option_border_err;
     };
   };
   /* if options are o.k., enable button: */

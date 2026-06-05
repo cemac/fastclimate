@@ -21,11 +21,13 @@ import numpy as np
 DEFAULTS = {
     #  model run time (years):
     'tmax': 15,
-    #  plot only last plotyears (years):
+    #  plot from this year:
+    'plotstart': 13,
+    #  plot this many years (years):
     'plotyears': 2,
     #  this model run will be compared with one
     #  other previous run:
-    'comparewith': '35yearstandard.json',
+    'comparewith': '100yearstandard.json',
     # offset initial conditions ...
     # initial temperature offsets (^oC)
     # (Tocean<freezing will be adjusted):
@@ -184,6 +186,7 @@ def run_fastclimate(options=None, data=None, comparewith=None):
 
     # set variables from options:
     tmax = options['tmax']
+    plotstart = options['plotstart']
     plotyears = options['plotyears']
     comparewith = options['comparewith']
     toffset = options['toffset']
@@ -628,10 +631,14 @@ def run_fastclimate(options=None, data=None, comparewith=None):
     # last year only:
     cnit = np.arange(it - cnplot - 1, it)
     # nit and ttp for time series plots ... :
-    nplot = round((plotyears * 365) / (savestep * dtday))
-    # plot last plotyears only:
-    nit = np.arange(it - nplot, it, dtype=int)
-    ttp = tt[nit] / 365
+    plot_start = plotstart - 0.05
+    plot_end = plotstart + plotyears + 0.05
+    tty = tt / 365
+    nit = np.where(
+      (plot_start <= tty) & (tty <= plot_end)
+    )
+    ttp = tty[nit]
+    nit = nit[0]
 
     # create dict for storing result:
     result = {
